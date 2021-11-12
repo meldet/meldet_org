@@ -1,0 +1,262 @@
+{
+    "alloism": {
+        "id": 1,
+        "name": "alloism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "anti-Blackness": {
+        "id": 2,
+        "name": "anti-Blackness",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "antisemitism": {
+        "id": 3,
+        "name": "antisemitism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "biphobia": {
+        "id": 4,
+        "name": "biphobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "catcalling": {
+        "id": 5,
+        "name": "catcalling",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "classism": {
+        "id": 6,
+        "name": "classism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "enbyphobia": {
+        "id": 7,
+        "name": "enbyphobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "ethnocentrism": {
+        "id": 8,
+        "name": "ethnocentrism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "eugenics": {
+        "id": 9,
+        "name": "eugenics",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "fatphobia": {
+        "id": 10,
+        "name": "fatphobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "homophobia": {
+        "id": 11,
+        "name": "homophobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "islamophobia": {
+        "id": 12,
+        "name": "islamophobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "lesbophobia": {
+        "id": 13,
+        "name": "lesbophobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "misogynoir": {
+        "id": 14,
+        "name": "misogynoir",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "misogyny": {
+        "id": 15,
+        "name": "misogyny",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "nativism": {
+        "id": 16,
+        "name": "nativism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "queerphobia": {
+        "id": 17,
+        "name": "queerphobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "racism": {
+        "id": 18,
+        "name": "racism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "religious-imperialism": {
+        "id": 19,
+        "name": "religious imperialism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "sexism": {
+        "id": 20,
+        "name": "sexism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "sizeism": {
+        "id": 22,
+        "name": "sizeism",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "stigmatization-of-addiction": {
+        "id": 23,
+        "name": "stigmatization of addiction",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "stigmatization-of-homelessness": {
+        "id": 24,
+        "name": "stigmatization of homelessness",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "toxic-masculinity": {
+        "id": 25,
+        "name": "toxic masculinity",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "transphobia": {
+        "id": 26,
+        "name": "transphobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    },
+    "whorephobia": {
+        "id": 27,
+        "name": "whorephobia",
+        "description": "",
+        "visualisationColor": [
+            0,
+            0,
+            0
+        ]
+    }
+}
