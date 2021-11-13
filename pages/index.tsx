@@ -26,7 +26,8 @@ const Home: NextPage<Props> = ({reports, categories, env}) => {
           Meldet.org
         </h1>
         <Navigation />
-        {/* <div>
+        <div className={styles.mapContainer}>
+        <div>
           {
             reports.slice(0, 10).map(report => (
               <div key={report.id}>
@@ -35,8 +36,9 @@ const Home: NextPage<Props> = ({reports, categories, env}) => {
               </div>
             ))
           }
-        </div> */}
+        </div>
         <Map reports={reports} categories={categories}></Map>
+        </div>
       </main>
     </div>
   )

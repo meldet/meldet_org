@@ -114,3 +114,7 @@
     flex-direction: column;
   }
 }
+
+.mapContainer {
+  display: flex;
+}
