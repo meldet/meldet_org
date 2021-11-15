@@ -1,47 +1,35 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Map from '../components/Map'
-import Navigation from '../components/Navigation'
 import { getStaticCategories, getStaticReports } from '../lib/data'
-import { Categories, Report } from '../models'
-import styles from '../styles/Home.module.css'
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Link from '../src/Link';
+import { Category, Report } from '.prisma/client'
 
 interface Props {
   reports: Report[],
-  categories: Categories,
+  categories: Category[],
   env?: string
 }
 const Home: NextPage<Props> = ({reports, categories, env}) => {
 
   return (
-    <div className={styles.container}>
+    <Container maxWidth="lg">
       <Head>
         <title>Meldet</title>
         <meta name="description" content="meldet report ..." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
+      <Box sx={{ position: 'relative'}}>
+        <Typography variant="h1" component="h1" gutterBottom fontWeight="bold">
           Meldet.org
-        </h1>
-        <Navigation />
-        <div className={styles.mapContainer}>
-        <div>
-          {
-            reports.slice(0, 10).map(report => (
-              <div key={report.id}>
-                <div>{report.title}</div>
-                <div>{report.description}</div>
-              </div>
-            ))
-          }
-        </div>
+        </Typography>
         <Map reports={reports} categories={categories}></Map>
-        </div>
-      </main>
-    </div>
-  )
+      </Box>
+    </Container>
+  );
 }
 
 export default Home
@@ -49,7 +37,7 @@ export default Home
 
 export async function getStaticProps() {
   const reports = getStaticReports()
-  const categories = getStaticCategories()
+  const categories = await getStaticCategories()
 
   return {
     props: {

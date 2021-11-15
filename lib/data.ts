@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
-import { Categories, InputResults } from "../models";
+import { InputResults } from "../models";
+import prisma from "./prisma";
 
 const folder = path.join(process.cwd() , 'staticData')
 
@@ -25,8 +26,8 @@ export function getStaticReports()  {
     }))
 }
 
-export function getStaticCategories() {
-    const data: Categories = parseJsonFileAsString(folder, 'categories.json')
-    return data
+export async function getStaticCategories() {
+    const categories = await prisma.category.findMany()
+    // const data: Categories = parseJsonFileAsString(folder, 'categories.json')
+    return categories
 }
-

@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReportStatus {
+    RECEIVED
+    REVIEWED
+    PUBLISHED
+}
+
+model Report {
+  id                    Int        @id @default(autoincrement())
+  createdAt             DateTime   @default(now())
+  address               Json?
+  lat                   Float
+  lng                   Float
+  title                 String
+  description           String     @default("")
+  status                ReportStatus   @default(RECEIVED)
+  isPrivate             Boolean    @default(false)
+  hasSocialMediaConsent Boolean    @default(false)
+  categories            Category[]
+}
+
+model Category {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  description        String   @default("")
+  visualisationColor String   @default("#000000")
+  reports            Report[]
+}
