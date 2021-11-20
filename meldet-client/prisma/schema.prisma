@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRoles {
+  ADMIN
+}
+
+enum ReportStatus {
+  RECEIVED
+  REVIEWED
+  PUBLISHED
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  latestActivity DateTime       @default(now())
+  name           String
+  lastName       String
+  role           UserRoles
+  statusChanges  StatusChange[]
+}
+
+model Report {
+  id                    Int            @id @default(autoincrement())
+  createdAt             DateTime       @default(now())
+  incidentDate          String?
+  address               String
+  lat                   String
+  lng                   String
+  title                 String
+  description           String         @default("")
+  statusChanges         StatusChange[]
+  isPrivate             Boolean        @default(false)
+  hasSocialMediaConsent Boolean        @default(false)
+  categories            Category[]
+}
+
+model Category {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  description        String   @default("")
+  visualisationColor String   @default("#000000")
+  reports            Report[]
+}
+
+model StatusChange {
+  id                   Int           @id @default(autoincrement())
+  report               Report        @relation(fields: [reportId], references: [id])
+  reportId             Int
+  user                 User?         @relation(fields: [userId], references: [id])
+  userId               Int?
+  previousStatusChange StatusChange? @relation("statusChangeHistory")
+  nextStatusChange     StatusChange? @relation("statusChangeHistory", fields: [nextStatusChangeId], references: [id])
+  nextStatusChangeId   Int?           @unique
+  status               ReportStatus
+}
