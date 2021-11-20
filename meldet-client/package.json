@@ -1,6 +1,7 @@
 {
-  "name": "meldet_org",
+  "name": "meldet-client",
   "private": true,
+  "version": "0.0.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -8,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "meldet-api": "*",
     "next": "12.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2"

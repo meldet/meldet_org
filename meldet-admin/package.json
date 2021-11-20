@@ -1,0 +1,8 @@
+{
+  "name": "meldet-admin",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "meldet-api": "*"
+  }
+}

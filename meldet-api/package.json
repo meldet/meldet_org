@@ -1,0 +1,6 @@
+{
+  "name": "meldet-api",
+  "main": "index.ts",
+  "private": true,
+  "version": "0.0.1"
+}
