@@ -2,7 +2,7 @@
 CREATE TYPE "UserRoles" AS ENUM ('ADMIN');
 
 -- CreateEnum
-CREATE TYPE "ReportStatus" AS ENUM ('RECEIVED', 'REVIEWED', 'PUBLISHED');
+CREATE TYPE "ReportStatus" AS ENUM ('RECEIVED', 'REVIEWED', 'PUBLISHED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "SocialMediaConstentOptions" AS ENUM ('ACCEPTED', 'DECLINED', 'UNKNOWN');

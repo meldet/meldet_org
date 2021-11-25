@@ -15,6 +15,7 @@ enum ReportStatus {
   RECEIVED
   REVIEWED
   PUBLISHED
+  REJECTED
 }
 
 enum SocialMediaConstentOptions {
@@ -44,7 +45,7 @@ model Report {
   description           String         @default("")
   statusChanges         StatusChange[]
   isPrivate             Boolean        @default(false)
-  socialMediaConsent    SocialMediaConstentOptions  @default(UNKNOWN)
+socialMediaConsent    SocialMediaConstentOptions  @default(UNKNOWN)
   categories            Category[]
 }
 
