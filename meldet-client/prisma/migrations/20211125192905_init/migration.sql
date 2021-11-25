@@ -4,6 +4,9 @@ CREATE TYPE "UserRoles" AS ENUM ('ADMIN');
 -- CreateEnum
 CREATE TYPE "ReportStatus" AS ENUM ('RECEIVED', 'REVIEWED', 'PUBLISHED');
 
+-- CreateEnum
+CREATE TYPE "SocialMediaConstentOptions" AS ENUM ('ACCEPTED', 'DECLINED', 'UNKNOWN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -27,7 +30,7 @@ CREATE TABLE "Report" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL DEFAULT E'',
     "isPrivate" BOOLEAN NOT NULL DEFAULT false,
-    "hasSocialMediaConsent" BOOLEAN NOT NULL DEFAULT false,
+    "socialMediaConsent" "SocialMediaConstentOptions" NOT NULL DEFAULT E'UNKNOWN',
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );

@@ -17,6 +17,12 @@ enum ReportStatus {
   PUBLISHED
 }
 
+enum SocialMediaConstentOptions {
+  ACCEPTED
+  DECLINED
+  UNKNOWN
+}
+
 model User {
   id             Int            @id @default(autoincrement())
   createdAt      DateTime       @default(now())
@@ -38,7 +44,7 @@ model Report {
   description           String         @default("")
   statusChanges         StatusChange[]
   isPrivate             Boolean        @default(false)
-  hasSocialMediaConsent Boolean        @default(false)
+  socialMediaConsent    SocialMediaConstentOptions  @default(UNKNOWN)
   categories            Category[]
 }
 
