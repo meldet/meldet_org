@@ -1,6 +1,7 @@
 {
-  "name": "meldet_org",
+  "name": "meldet-client",
   "private": true,
+  "version": "0.0.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -8,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "meldet-api": "*",
     "next": "12.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -17,10 +19,6 @@
     "@types/react": "17.0.34",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.3",
-    "ts-node": "^10.4.0",
     "typescript": "4.4.4"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
