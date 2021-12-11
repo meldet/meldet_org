@@ -18,6 +18,13 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+## setting up database with Prisma
+First of all, add your database connection information in `prisma/.env`. Run `cp prisma/.env prisma/.env.template` to create the file, then fill in the missing connection data. 
+`npx prisma migrate dev --name init`. This will create the tables in your database, automatically create a migration file and run the seed script to populate your dev database with (mock) data. 
+To run the seeding script manually, run `npx prisma db seed`. `npx prisma generate` will generate your Prisma client (npxand types) manually.
+
+You can easily inspect your database with the prisma-studio tool. Just running `npx prisma studio` will open a browser window with everything you need. No need for a seperate database tool. 
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

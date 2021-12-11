@@ -1,0 +1,142 @@
+[
+    {
+        "id": 3,
+        "name": "ableism",
+        "description": "discrimination in favour of able-bodied people"
+    },
+    {
+        "id": 4,
+        "name": "ageism",
+        "description": "stereotyping and/or discrimination against individuals or groups on the basis of their age"
+    },
+    {
+        "id": 5,
+        "name": "alloism",
+        "description": "systemic and systematic prejudice and discrimination against people who are asexual"
+    },
+    {
+        "id": 6,
+        "name": "anti-Blackness",
+        "description": "prejudice, discrimination, or antagonism by an individual, community, or institution against a person or people on the basis of their Blackness"
+    },
+    {
+        "id": 7,
+        "name": "antisemitism",
+        "description": "hostility to, prejudice, or discrimination against Jews"
+    },
+    {
+        "id": 8,
+        "name": "biphobia",
+        "description": "irrational fear of, and aversion to, bisexuality or bisexual persons"
+    },
+    {
+        "id": 9,
+        "name": "catcalling",
+        "description": "the act of shouting harassing and often sexually suggestive, threatening, or derisive comments at someone publicly"
+    },
+    {
+        "id": 10,
+        "name": "classism",
+        "description": "prejudice or discrimination on the basis of social class"
+    },
+    {
+        "id": 11,
+        "name": "enbyphobia",
+        "description": "dislike of or prejudice against non-binary people"
+    },
+    {
+        "id": 13,
+        "name": "ethnocentrism",
+        "description": "evaluation of other cultures according to preconceptions originating in the standards and customs of one’s own culture"
+    },
+    {
+        "id": 12,
+        "name": "eugenics",
+        "description": "practice or advocacy of improving the human species by selectively mating people with specific desirable hereditary traits"
+    },
+    {
+        "id": 14,
+        "name": "fatphobia",
+        "description": "prejudice, or discrimination of fat people"
+    },
+    {
+        "id": 15,
+        "name": "homophobia",
+        "description": "dislike of or prejudice against gay people"
+    },
+    {
+        "id": 16,
+        "name": "islamophobia",
+        "description": "fear of, hatred of, or prejudice against the religion of Islam or Muslims in general"
+    },
+    {
+        "id": 17,
+        "name": "lesbophobia",
+        "description": "hatred, fear and disgust towards lesbians"
+    },
+    {
+        "id": 19,
+        "name": "misogynoir",
+        "description": "hatred of, contempt for, or prejudice against black women or girls"
+    },
+    {
+        "id": 18,
+        "name": "misogyny",
+        "description": "hatred of, contempt for, or prejudice against women or girls"
+    },
+    {
+        "id": 20,
+        "name": "nativism",
+        "description": "the policy of protecting the interests of native-born or established inhabitants against those of immigrants"
+    },
+    {
+        "id": 21,
+        "name": "queerphobia",
+        "description": "fear or hatred of queer people"
+    },
+    {
+        "id": 22,
+        "name": "racism",
+        "description": "prejudice, discrimination, or antagonism by an individual, community, or institution against a person or people on the basis of their membership of a particular racial or ethnic group, typically one that is a minority or marginalized"
+    },
+    {
+        "id": 23,
+        "name": "religious imperialism",
+        "description": "active suppression of other religions"
+    },
+    {
+        "id": 24,
+        "name": "sexism",
+        "description": "prejudice, stereotyping, or discrimination, typically against women, on the basis of sex"
+    },
+    {
+        "id": 25,
+        "name": "sizeism",
+        "description": "prejudice or discrimination on the grounds of a person’s size or weight"
+    },
+    {
+        "id": 26,
+        "name": "stigmatization of addiction",
+        "description": ""
+    },
+    {
+        "id": 27,
+        "name": "stigmatization of homelessness",
+        "description": ""
+    },
+    {
+        "id": 28,
+        "name": "toxic masculinity",
+        "description": "a set of attitudes and ways of behaving stereotypically associated with or expected of men, regarded as having a negative impact on men and on society as a whole"
+    },
+    {
+        "id": 29,
+        "name": "transphobia",
+        "description": "dislike of or prejudice against transsexual or transgender people"
+    },
+    {
+        "id": 30,
+        "name": "whorephobia",
+        "description": "hatred of, oppression of, violence towards, and discrimination against sex worke"
+    }
+]
