@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import {
   Drawer,
   Grid,
@@ -11,6 +10,9 @@ import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ReportsFilter from "../components/ReportsFilter";
+import { GetStaticProps } from "next";
+import { fetchReports } from "../lib/fetchReports";
+import { Report } from ".prisma/client";
 
 
 const drawerWidth = 240;
@@ -24,9 +26,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
+interface IndexProps {
+  reports: Report[],
+  notFound?: boolean
+}
 
-
-export default function Index() {
+const Index = ({reports, notFound}: IndexProps) => {
   const isMobile = useMediaQuery("(max-width:800px)"); // TODO this should go in context
 
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
@@ -67,4 +72,20 @@ export default function Index() {
       </Drawer>
     </Grid>
   );
+}
+
+export default Index;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const reports = await fetchReports()
+
+  if (!reports) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {reports},
+  };
 }
