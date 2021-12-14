@@ -11,8 +11,9 @@ import Navigation from "../components/Navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ReportsFilter from "../components/ReportsFilter";
 import { GetStaticProps } from "next";
-import { fetchReports } from "../lib/fetchReports";
+import { fetchCategories, fetchReports } from "../lib/helpers";
 import { Report } from ".prisma/client";
+import { Category } from "@prisma/client";
 
 
 const drawerWidth = 240;
@@ -28,10 +29,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 interface IndexProps {
   reports: Report[],
+  categories: Category[],
   notFound?: boolean
 }
 
-const Index = ({reports, notFound}: IndexProps) => {
+const Index = ({reports, categories, notFound}: IndexProps) => {
+  console.log(reports)
   const isMobile = useMediaQuery("(max-width:800px)"); // TODO this should go in context
 
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
@@ -76,16 +79,21 @@ const Index = ({reports, notFound}: IndexProps) => {
 
 export default Index;
 
-export const getStaticProps: GetStaticProps = async () => {
-  const reports = await fetchReports()
+export const getStaticProps: GetStaticProps = async ({
 
-  if (!reports) {
+}) => {
+  const reports = await fetchReports()
+  const categories = await fetchCategories()
+
+  if (!reports || !categories) {
     return {
       notFound: true,
+      revalidate: 60 * 15,
     };
   }
 
   return {
-    props: {reports},
+    props: { reports, categories },
+    revalidate: 60 * 15, // rebuild the site every 15 minutes with the latest data
   };
 }
