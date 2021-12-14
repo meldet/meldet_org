@@ -34,7 +34,6 @@ interface IndexProps {
 }
 
 const Index = ({reports, categories, notFound}: IndexProps) => {
-  console.log(reports)
   const isMobile = useMediaQuery("(max-width:800px)"); // TODO this should go in context
 
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context

@@ -9,7 +9,7 @@ export const fetchReports = async (limit = 5000) => {
     return await prisma.report.findMany({
         orderBy: {createdAt: 'desc'},
         take: limit,
-        select: { // leave out createdAt (for privacy), isPrivate and statusChanges
+        select: {
             address: true, 
             categories: {
                 select: {
@@ -22,8 +22,11 @@ export const fetchReports = async (limit = 5000) => {
             incidentDate: true, 
             lat: true,
             lng: true,
-            socialMediaConsent: true, 
             title: true,  
+            socialMediaConsent: false, // we don't need this for the client-facing app
+            createdAt: false, // filter out for privacy reasons
+            isPrivate: false, // is filtered out above
+            statusChanges: false, // Not relevant
         }
     })
 }
