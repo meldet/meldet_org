@@ -1,8 +1,46 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import * as React from "react";
+import Head from "next/head";
+import { AppProps } from "next/app";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import theme from "../theme";
+import createEmotionCache from "../createEmotionCache";
+import Navigation from "../components/Navigation";
+import { UiContext } from "../lib/context";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
+
+interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache;
 }
 
-export default MyApp
+export default function MyApp(props: MyAppProps) {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const [state, setState] = React.useState({isMobile: true});
+
+  const isMobile = useMediaQuery("(max-width:800px)", {noSsr: true});
+
+  React.useEffect(() => {
+    setState({...state, isMobile})
+  }, [isMobile])
+  
+
+  return (
+    <CacheProvider value={emotionCache}>
+      <Head>
+        <title>Meldet.org</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <UiContext.Provider value={state}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <Component {...pageProps} />
+        </UiContext.Provider>
+      </ThemeProvider>
+    </CacheProvider>
+  );
+}

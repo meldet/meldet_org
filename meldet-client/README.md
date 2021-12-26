@@ -2,15 +2,18 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+1. Make sure to create a `meldet-client/.env.local`. You can copy them from the .`env.template` files
+
+2. run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+4. For getting the database up and running, see next heading.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
