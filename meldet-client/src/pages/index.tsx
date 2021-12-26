@@ -3,8 +3,6 @@ import {
   Drawer,
   Grid,
   IconButton,
-
-  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
@@ -14,6 +12,7 @@ import { GetStaticProps } from "next";
 import { fetchCategories, fetchReports } from "../lib/helpers";
 import { Report } from ".prisma/client";
 import { Category } from "@prisma/client";
+import { UiContext } from "../lib/context";
 
 
 const drawerWidth = 240;
@@ -34,7 +33,6 @@ interface IndexProps {
 }
 
 const Index = ({reports, categories, notFound}: IndexProps) => {
-  const isMobile = useMediaQuery("(max-width:800px)"); // TODO this should go in context
 
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
 
@@ -47,32 +45,36 @@ const Index = ({reports, categories, notFound}: IndexProps) => {
   };
 
   return (
-    <Grid container flexDirection="column" alignItems={"flex-end"}>
-      <Navigation></Navigation>
-      <ReportsFilter />
+    <UiContext.Consumer>
+      {({ isMobile }) => (
+        <Grid container flexDirection="column" alignItems={"flex-end"}>
+          <Navigation></Navigation>
+          <ReportsFilter />
 
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: isMobile ? "100%" : drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor={isMobile ? "bottom" : "left"}
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </DrawerHeader>
+          <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: isMobile ? "100%" : drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            variant="persistent"
+            anchor={isMobile ? "bottom" : "left"}
+            open={open}
+          >
+            <DrawerHeader>
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </DrawerHeader>
 
-        <div>content container</div>
-      </Drawer>
-    </Grid>
+            <div>content container</div>
+          </Drawer>
+        </Grid>
+      )}
+    </UiContext.Consumer>
   );
 }
 

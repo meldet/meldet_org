@@ -7,6 +7,8 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../createEmotionCache";
 import Navigation from "../components/Navigation";
+import { UiContext } from "../lib/context";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -17,6 +19,15 @@ interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const [state, setState] = React.useState({isMobile: true});
+
+  const isMobile = useMediaQuery("(max-width:800px)", {noSsr: true});
+
+  React.useEffect(() => {
+    setState({...state, isMobile})
+  }, [isMobile])
+  
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -24,9 +35,11 @@ export default function MyApp(props: MyAppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
+        <UiContext.Provider value={state}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <Component {...pageProps} />
+        </UiContext.Provider>
       </ThemeProvider>
     </CacheProvider>
   );
