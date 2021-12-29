@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../createEmotionCache";
-import { UiContext } from "../lib/context";
+import { DataContext, UiContext } from "../lib/context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -18,16 +18,17 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function MyApp(props: MyAppProps) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const [state, setState] = React.useState({isMobile: true});
-
-  const isMobile = useMediaQuery("(max-width:800px)", {noSsr: true});
+export default function MyApp({
+  Component,
+  emotionCache = clientSideEmotionCache,
+  pageProps,
+}: MyAppProps) {
+  const [state, setState] = React.useState({ isMobile: true });
+  const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
 
   React.useEffect(() => {
-    setState({...state, isMobile})
-  }, [isMobile])
-  
+    setState({ ...state, isMobile });
+  }, [isMobile]);
 
   return (
     <CacheProvider value={emotionCache}>
@@ -38,9 +39,10 @@ export default function MyApp(props: MyAppProps) {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <UiContext.Provider value={state}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+
           </UiContext.Provider>
         </ThemeProvider>
       </LocalizationProvider>

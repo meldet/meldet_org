@@ -10,14 +10,14 @@ switch (req.method) {
   case 'POST':
 
     try {
-
       
       const values = req.body
+      console.log(values.categories)
       const response = await prisma.report.create({data: {
         ...values,
         categories: {
-            connect: values.categories?.map(({id}: Category) => ({
-                id
+            connect: values.categories.map((categoryId: string) => ({
+                id: categoryId
             }))
         },
         statusChanges: {
@@ -29,6 +29,7 @@ switch (req.method) {
     } catch (err) {
       console.log('that went very wrong: ', err)
       res.status(500).json({errorMessage: 'request not correctly formed'})
+
     }
     break;
 

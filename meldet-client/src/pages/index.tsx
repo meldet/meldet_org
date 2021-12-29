@@ -8,10 +8,6 @@ import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ReportsFilter from "../components/ReportsFilter";
-import { GetStaticProps } from "next";
-import { fetchCategories, fetchReports } from "../lib/helpers";
-import { Report } from ".prisma/client";
-import { Category } from "@prisma/client";
 import { UiContext } from "../lib/context";
 
 
@@ -26,13 +22,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-interface IndexProps {
-  reports: Report[],
-  categories: Category[],
-  notFound?: boolean
-}
 
-const Index = ({reports, categories, notFound}: IndexProps) => {
+const Index = () => {
 
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
 
@@ -80,21 +71,19 @@ const Index = ({reports, categories, notFound}: IndexProps) => {
 
 export default Index;
 
-export const getStaticProps: GetStaticProps = async ({
+// export const getStaticProps: GetStaticProps = async ({}) => {
+//   const reports = await fetchReports();
+//   const categories = await fetchCategories();
 
-}) => {
-  const reports = await fetchReports()
-  const categories = await fetchCategories()
+//   if (!reports || !categories) {
+//     return {
+//       notFound: true,
+//       revalidate: 60 * 15,
+//     };
+//   }
 
-  if (!reports || !categories) {
-    return {
-      notFound: true,
-      revalidate: 60 * 15,
-    };
-  }
-
-  return {
-    props: { reports, categories },
-    revalidate: 60 * 15, // rebuild the site every 15 minutes with the latest data
-  };
-}
+//   return {
+//     props: { reports, categories },
+//     revalidate: 60 * 15, // rebuild the site every 15 minutes with the latest data
+//   };
+// };

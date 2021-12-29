@@ -1,10 +1,9 @@
-import { Button, LinearProgress, MenuItem } from "@mui/material";
+import { Box, Button, Checkbox, Chip, LinearProgress, ListItemText, MenuItem, OutlinedInput, Theme } from "@mui/material";
 import { Category } from "@prisma/client";
 import { Formik, Form, Field } from "formik";
 import { TextField, Autocomplete, Select } from "formik-mui";
 import { DateTimePicker } from "formik-mui-lab";
 import * as React from "react";
-import { Switch } from "formik-mui";
 import { ReportFormValues, ReportSteps } from "../pages/report";
 
 
@@ -18,12 +17,22 @@ interface IReportForm {
   formState: ReportFormValues;
   handleFormSubmit: (formValues: ReportFormValues) => void;
   handleStepChange: (step: ReportSteps) => void;
+  categories: Category[];
 }
 
-export default function ReportForm({formState, handleFormSubmit, handleStepChange}: IReportForm) {
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+export default function ReportForm({categories, formState, handleFormSubmit, handleStepChange}: IReportForm) {
   return (
     <Formik
-      initialValues={{...formState}}
+      initialValues={{ ...formState }}
       validate={(values) => {
         const errors: Partial<Values> = {};
         if (!values.title) {
@@ -32,9 +41,11 @@ export default function ReportForm({formState, handleFormSubmit, handleStepChang
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-          handleFormSubmit({...values})
-          setSubmitting(false)
-          handleStepChange('review')
+        handleFormSubmit({ 
+          ...values,
+         });
+        setSubmitting(false);
+        handleStepChange("review");
       }}
     >
       {({ submitForm, isSubmitting }) => (
@@ -59,12 +70,22 @@ export default function ReportForm({formState, handleFormSubmit, handleStepChang
           <br />
           <Field
             component={Select}
+            multiple
             // formControl={{ sx: sxFormControl }}
-            formHelperText={{ children: "Select your categories" }}
+            formHelperText={{ children: "Select one or more categories" }}
             id="categories"
             name="categories"
             labelId="Categories"
             label="Categories"
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            renderValue={(selected: string[]) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {console.log(selected)}
+                {selected.map((value: string) => (
+                  <Chip key={value} label={JSON.parse(value).name} />
+                ))}
+              </Box>
+            )}
             // validate={(age: number) =>
             //   !age
             //     ? "Please enter your age"
@@ -73,9 +94,17 @@ export default function ReportForm({formState, handleFormSubmit, handleStepChang
             //     : undefined
             // }
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {categories &&
+              categories.map((category) => (
+                <MenuItem
+                  key={category.id}
+                  value={JSON.stringify(category)}
+                  // style={getStyles(name, personName, theme)}
+                >
+                  {/* <Checkbox checked={values.indexOf(name) > -1} /> */}
+                  <ListItemText inset primary={category.name} secondary={category.description}  />
+                </MenuItem>
+              ))}
           </Field>
           <br />
           <Field

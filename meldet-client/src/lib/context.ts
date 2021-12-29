@@ -1,4 +1,5 @@
 
+import { Category, Report } from "@prisma/client";
 import React from "react";
 
 export const UiContext = React.createContext({
@@ -18,3 +19,11 @@ export const UiContext = React.createContext({
 //   endDateFilter: '',
 //   setEndDateFilter: () => {},
 });
+
+export const DataContext = React.createContext<{
+  reports: Report[], 
+  categories: Category[]
+}> ({
+  reports: [],
+  categories: []
+})
