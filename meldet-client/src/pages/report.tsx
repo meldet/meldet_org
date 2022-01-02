@@ -2,7 +2,7 @@ import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Navigation from "../components/Navigation";
-import { Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import ReportForm from "../components/ReportForm";
 import { useRouter } from "next/router";
 import { Category, Report as ReportModel } from "@prisma/client";
@@ -28,7 +28,7 @@ const reportFormDefault = {
   categories: [],
   incidentDate: new Date(),
   description: "",
-  socialMediaConsent: false,
+  socialMediaConsent: true  ,
   canIdentifyOffenders: false,
   isPrivate: false,
 };
@@ -66,26 +66,29 @@ export default function Report({categories}: IReport) {
           <Typography variant="h4" component="h1" gutterBottom>
             Report step {step}
           </Typography>
+          <Paper>
+
           {step == "report" && (
             <ReportForm
-              formState={formState}
-              handleFormSubmit={handleFormSubmit}
-              handleStepChange={handleStepChange}
-              categories={categories}
+            formState={formState}
+            handleFormSubmit={handleFormSubmit}
+            handleStepChange={handleStepChange}
+            categories={categories}
             />
-          )}
+            )}
           {step == "review" && (
             <ReportReview
-              formState={formState}
-              handleFormSubmit={handleFormSubmit}
-              handleStepChange={handleStepChange}
+            formState={formState}
+            handleFormSubmit={handleFormSubmit}
+            handleStepChange={handleStepChange}
             />
-          )}
+            )}
           {
             step == "success" && (
               <ReportFormSuccess />
-            )
-          }
+              )
+            }
+            </Paper>
         </Box>
       </Grid>
     );
