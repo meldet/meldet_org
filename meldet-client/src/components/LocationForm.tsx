@@ -1,19 +1,22 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
 import { throttle } from "lodash";
 import { getPlaceSuggestions } from "../lib/geocoding";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ReportFormValues } from "../pages/report";
 
-export interface Location {
-    label: string,
-    latitude?: number,
-    longitude?: number,
+export type Location = Partial<ReportFormValues>
+
+export interface ApiLocation {
+  label: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface ILocationForm {
-    location: Location
-    setLocation: React.Dispatch<React.SetStateAction<Location>>
+  location: Location;
+  setLocation: (formValues: Partial<ReportFormValues>) => void;
 }
 
 export default function LocationForm({location, setLocation}: ILocationForm) {
@@ -24,9 +27,14 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
 
     const fetch = throttle(async (string: string) => {
       console.log("querying for ", string);
-      const { data, status } = await getPlaceSuggestions(string);
+      const { data: {data}, status }: {status: number, data: {data: ApiLocation[]}} = await getPlaceSuggestions(string);
       console.log("fetched: ", status, data);
-      status == 200 && data.data && setSuggestions([...data.data]);
+      status == 200 && data && setSuggestions(data.map(location => ({
+        ...location,
+        address: location.label,
+        lat: String(location.latitude),
+        lng: String(location.longitude)
+      })));
       setLoading(false)
     }, 500);
 
@@ -44,8 +52,7 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
       value={location}
       onChange={async (e, newValue: string | Location | null) => {
         if (typeof newValue == "string" || !newValue) return;
-        console.log(newValue);
-        setLocation(newValue);
+        setLocation({...newValue});
       }}
       filterOptions={(options: Location[], params) => {
         const { inputValue } = params;
@@ -53,7 +60,7 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
 
         if (inputValue.length >= 3) {
           newOptions.push({
-            label: `Add "${inputValue}"`,
+            address: inputValue,
           });
         }
         return newOptions;
@@ -63,13 +70,13 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
       handleHomeEndKeys
       id="location"
       options={suggestions}
-      getOptionLabel={(suggestion: Location) => suggestion.label}
+      getOptionLabel={(suggestion: Location) => suggestion.address || ''}
       //   renderOption={(props, option) => <li {...props}>{option.title}</li>}
       freeSolo
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Location"
+          label="Location*"
           onChange={(e: any) => {
             setTextfieldValue(e.target.value);
           }}

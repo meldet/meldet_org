@@ -2,11 +2,12 @@ import {
   Box,
   Button,
   Chip,
+  FormControl,
   Grid,
-  LinearProgress,
   ListItemText,
   MenuItem,
   OutlinedInput,
+  Typography,
 } from "@mui/material";
 import { Category } from "@prisma/client";
 import { Formik, Form, Field } from "formik";
@@ -15,18 +16,15 @@ import { DateTimePicker } from "formik-mui-lab";
 import * as React from "react";
 import { ReportFormValues, ReportSteps } from "../pages/report";
 import LocationForm, { Location } from "./LocationForm";
+import ReportMapPicker from "./ReportMapPicker";
 
-interface Values {
-  location: string;
-  title: string;
-  categories: Category[];
-}
 
 interface IReportForm {
   formState: ReportFormValues;
-  handleFormSubmit: (formValues: ReportFormValues) => void;
+  handleFormSubmit: (formValues: Partial<ReportFormValues>) => void;
   handleStepChange: (step: ReportSteps) => void;
   categories: Category[];
+  isMobile: boolean;
 }
 
 
@@ -35,129 +33,160 @@ export default function ReportForm({
   formState,
   handleFormSubmit,
   handleStepChange,
+  isMobile
 }: IReportForm) {
   
-  const [location, setLocation] = React.useState<Location>({label: ''});
+
 
   return (
     <Formik
       initialValues={{ ...formState }}
       validate={(values) => {
-        const errors: Partial<Values> = {};
+        const errors: any = {};
         if (!values.title) {
           errors.title = "Required";
-        }
+        } else if (!values.categories) {
+          errors.categories = "Required";
+        } else if (!values.incidentDate) {
+          errors.incidentDate = "Required";
+        } 
+        // else if (!values.address) {
+        //   errors.address = "Required";
+        // }
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        console.log('submitting', location.latitude)
         handleFormSubmit({
           ...values,
-          address: location.label,
-          lat: location.latitude ? String(location.latitude) : '',
-          lng: location.longitude ? String(location.longitude) : '',
+          address: formState.address,
+          lat: formState.lat,
+          lng: formState.lng,
         });
         setSubmitting(false);
         handleStepChange("review");
       }}
     >
       {({ submitForm, isSubmitting }) => (
-        <Form>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={4}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Report
+          </Typography>
+          <Form>
+            <FormControl sx={{ p: 2, m: 0, width: "100%" }}>
+              <Grid container item spacing={3}>
+                <Grid item xs={12}>
+                  <LocationForm location={formState} setLocation={handleFormSubmit} />
+                </Grid>
 
+                {isMobile && <ReportMapPicker />}
 
-            <LocationForm 
-              location={location} 
-              setLocation={setLocation}
-            />
-
-
-
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Field
-                component={TextField}
-                type="text"
-                label="Title"
-                name="title"
-                InputProps={{ notched: true }}
-              />
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Field
-                component={Select}
-                multiple
-                // formControl={{ sx: sxFormControl }}
-                formHelperText={{ children: "Select one or more categories" }}
-                id="categories"
-                name="categories"
-                labelId="Categories"
-                label="Categories"
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected: string[]) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {console.log(selected)}
-                    {selected.map((value: string) => (
-                      <Chip key={value} label={JSON.parse(value).name} />
-                    ))}
-                  </Box>
-                )}
-                // validate={(age: number) =>
-                //   !age
-                //     ? "Please enter your age"
-                //     : age < 21
-                //     ? "You must be 21 or older"
-                //     : undefined
-                // }
-              >
-                {categories &&
-                  categories.map((category) => (
-                    <MenuItem
-                      key={category.id}
-                      value={JSON.stringify(category)}
-                      // style={getStyles(name, personName, theme)}
-                    >
-                      {/* <Checkbox checked={values.indexOf(name) > -1} /> */}
-                      <ListItemText
-                        inset
-                        primary={category.name}
-                        secondary={category.description}
+                <Grid item xs={12}>
+                  <Field
+                    component={Select}
+                    multiple
+                    formHelperText={{
+                      children: "Select one or more categories",
+                    }}
+                    id="categories"
+                    name="categories"
+                    labelId="Categories"
+                    label="Categories*"
+                    input={
+                      <OutlinedInput
+                        id="categories-input"
+                        label="categories*"
+                        fullWidth
+                        sx={{ minWidth: "100%" }}
                       />
-                    </MenuItem>
-                  ))}
-              </Field>
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Field
-                component={DateTimePicker}
-                label="Date"
-                name="date"
-                textField={{ helperText: "This is the date of the incident" }}
-              />
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Field
-                component={TextField}
-                multiline
-                minRows={6}
-                label="Description"
-                name="description"
-              />
-            </Grid>
-            <Grid item xs={12} md={8}>
-              {isSubmitting && <LinearProgress />}
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={isSubmitting}
-                onClick={submitForm}
-              >
-                Review
-              </Button>
-            </Grid>
-          </Grid>
-        </Form>
+                    }
+                    renderValue={(selected: string[]) => (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 0.5,
+                          width: "100%"
+                        }}
+                      >
+                        {selected.map((value: string) => (
+                          <Chip key={value} label={JSON.parse(value).name} />
+                        ))}
+                      </Box>
+                    )}
+                    validate={(values: any[]) =>
+                      values.length <= 0 ? "Required" : undefined
+                    }
+                  >
+                    {categories &&
+                      categories.map((category) => (
+                        <MenuItem
+                          key={category.id}
+                          value={JSON.stringify(category)}
+                          style={{ whiteSpace: "normal", maxWidth: 450 }}
+                        >
+                          {/* <Checkbox checked={values.indexOf(name) > -1} /> */}
+                          <ListItemText
+                            classes={{ primary: `color: red` }}
+                            inset
+                            primary={category.name.toUpperCase()}
+                            secondary={category.description}
+                          />
+                        </MenuItem>
+                      ))}
+                  </Field>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Field
+                    component={DateTimePicker}
+                    sx={{ width: "100%" }}
+                    label="Date"
+                    name="incidentDate"
+                    maxDate={new Date()}
+                    textField={{
+                      helperText: "This is the date of the incident",
+                    }}
+                    validate={(values: Date | undefined) =>
+                      !values ? "Required" : undefined
+                    }
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    type="text"
+                    label="Title*"
+                    name="title"
+                    fullWidth
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    multiline
+                    minRows={6}
+                    fullWidth
+                    label="Description"
+                    name="description"
+                    type="text"
+                  />
+                </Grid>
+                <Grid item justifySelf={"flex-end"} xs={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting}
+                    onClick={submitForm}
+                  >
+                    Review
+                  </Button>
+                </Grid>
+              </Grid>
+            </FormControl>
+          </Form>
+        </Grid>
       )}
     </Formik>
   );

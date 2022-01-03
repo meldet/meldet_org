@@ -10,6 +10,8 @@ import ReportReview from "../components/ReportReview";
 import ReportFormSuccess from "../components/ReportFormSuccess";
 import { fetchCategories } from "../lib/helpers";
 import { GetStaticProps } from "next";
+import { UiContext } from "../lib/context";
+import ReportMapPicker from "../components/ReportMapPicker";
 
 export type ReportSteps = 'report' | 'review' | 'contact' | 'success' // TODO: this could become an enum, but it might prove a bit tricky
 
@@ -53,44 +55,41 @@ export default function Report({categories}: IReport) {
 
   const [formState, setFormState] = React.useState<ReportFormValues>(reportFormDefault);
 
-  const handleFormSubmit = (formValues: ReportFormValues) => {
-    setFormState({...formValues})
+  const handleFormSubmit = (formValues: Partial<ReportFormValues>) => {
+    setFormState({...formState, ...formValues})
   }
 
 
 
     return (
-      <Grid container flexDirection="column">
-        <Navigation />
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Report step {step}
-          </Typography>
-          <Paper>
+      <UiContext.Consumer>
+        {({ isMobile }) => (
+          <Grid container flexDirection="column">
+            <Navigation />
 
-          {step == "report" && (
-            <ReportForm
-            formState={formState}
-            handleFormSubmit={handleFormSubmit}
-            handleStepChange={handleStepChange}
-            categories={categories}
-            />
-            )}
-          {step == "review" && (
-            <ReportReview
-            formState={formState}
-            handleFormSubmit={handleFormSubmit}
-            handleStepChange={handleStepChange}
-            />
-            )}
-          {
-            step == "success" && (
-              <ReportFormSuccess />
-              )
-            }
-            </Paper>
-        </Box>
-      </Grid>
+            <Grid container flexDirection={"row"} flexWrap={"wrap"}>
+              {step == "report" && (
+                <ReportForm
+                  formState={formState}
+                  handleFormSubmit={handleFormSubmit}
+                  handleStepChange={handleStepChange}
+                  categories={categories}
+                  isMobile={isMobile}
+                />
+              )}
+              {step == "review" && (
+                <ReportReview
+                  formState={formState}
+                  handleFormSubmit={handleFormSubmit}
+                  handleStepChange={handleStepChange}
+                />
+              )}
+              {step == "success" && <ReportFormSuccess />}
+              {!isMobile && <ReportMapPicker />}
+            </Grid>
+          </Grid>
+        )}
+      </UiContext.Consumer>
     );
 }
 

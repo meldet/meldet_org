@@ -1,24 +1,39 @@
-import { Alert, Button, LinearProgress, Stack } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Chip,
+  Grid,
+  LinearProgress,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as React from "react";
 import { Switch } from "formik-mui";
 import { ReportFormValues, ReportSteps } from "../pages/report";
 import { SocialMediaConstentOptions } from "@prisma/client";
-
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import EventIcon from '@mui/icons-material/Event';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { format } from "date-fns";
 
 interface IReportForm {
-    formState: ReportFormValues;
-    handleFormSubmit: (formValues: ReportFormValues) => void
-    handleStepChange: (step: ReportSteps) => void
+  formState: ReportFormValues;
+  handleFormSubmit: (formValues: ReportFormValues) => void;
+  handleStepChange: (step: ReportSteps) => void;
 }
 
-export default function ReportReview({formState, handleFormSubmit, handleStepChange}: IReportForm) {
-  const [responseStatus, setResponseStatus] = React.useState(0)
+export default function ReportReview({
+  formState,
+  handleFormSubmit,
+  handleStepChange,
+}: IReportForm) {
+  const [responseStatus, setResponseStatus] = React.useState(0);
   const handleBackClick = () => {
-    handleStepChange("report")
-
-  }
+    handleStepChange("report");
+  };
   return (
     <Formik
       initialValues={{ ...formState }}
@@ -30,7 +45,7 @@ export default function ReportReview({formState, handleFormSubmit, handleStepCha
           socialMediaConsent: values.socialMediaConsent
             ? SocialMediaConstentOptions.ACCEPTED
             : SocialMediaConstentOptions.DECLINED,
-          categories: values.categories.map(str => JSON.parse(str).id)
+          categories: values.categories.map((str) => JSON.parse(str).id),
         });
 
         const response = await fetch("http://localhost:3000/api/report", {
@@ -53,6 +68,50 @@ export default function ReportReview({formState, handleFormSubmit, handleStepCha
     >
       {({ submitForm, isSubmitting }) => (
         <Form>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Review
+          </Typography>
+          <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4 }}>
+            <Typography variant={"h5"} mb={1}>
+              {formState.title}
+            </Typography>
+            
+            <Grid container mb={1}>
+              <Grid item m={0.5} sx={{ display: "flex" }}>
+                <LocationOnIcon />
+                <Typography ml={1} mr={2} variant="caption">
+                  {formState.address}
+                </Typography>
+              </Grid>
+              <Grid item m={0.5} sx={{ display: "flex" }}>
+                <EventIcon />
+                <Typography ml={1} mr={2} variant="caption">
+                  {format(formState.incidentDate, "MM/dd/yyyy")}
+                </Typography>
+              </Grid>
+              <Grid m={0.5} item sx={{ display: "flex" }}>
+                <AccessTimeIcon />
+                <Typography ml={1} mr={2} variant="caption">
+                  {format(formState.incidentDate, "k:mm")}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Typography mb={2} variant="body1">
+              {formState.description}
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 0.5,
+              }}
+            >
+              {formState.categories.map((value: string) => (
+                <Chip key={value} label={JSON.parse(value).name} />
+              ))}
+            </Box>
+          </Paper>
           <Field component={Switch} type="checkbox" name="socialMediaConsent" />
           Allowed to publish on social media
           <br />
