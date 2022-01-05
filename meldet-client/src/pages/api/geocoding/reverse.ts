@@ -7,11 +7,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const {lat, lng} = req.query
         const url = new URL(
-            `/v1/forward?access_key=${process.env.GEOCODING_API_KEY}&query=${lat},${lng}&limit=10`, 
+            `/v1/reverse?access_key=${process.env.GEOCODING_API_KEY}&query=${lat},${lng}&limit=1`, 
             `${process.env.GEOCODING_API_BASE_URL}`)
         const response = await axios.get(url.href)
         console.log(url.href)
-        res.status(200).json(response.data)
+        res.status(200).json(response.data.data[0])
     } catch(err) {
         res.status(500)
         console.error(err)

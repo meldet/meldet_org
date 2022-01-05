@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  FormHelperText,
   Grid,
   LinearProgress,
   Paper,
@@ -27,7 +28,6 @@ interface IReportForm {
 
 export default function ReportReview({
   formState,
-  handleFormSubmit,
   handleStepChange,
 }: IReportForm) {
   const [responseStatus, setResponseStatus] = React.useState(0);
@@ -37,15 +37,42 @@ export default function ReportReview({
   return (
     <Formik
       initialValues={{ ...formState }}
+      validate={(values) => {
+        const errors: any = {};
+        if (!values.canIdentifyOffenders) {
+          errors.canIdentifyOffenders = "Required";
+        } else if (!values.address) {
+          errors.address = "Required";
+        }
+        return errors;
+      }}
       onSubmit={async (values, { setSubmitting }) => {
-        const { canIdentifyOffenders, ...rest } = values;
+        const {
+          canIdentifyOffenders,
+          address,
+          lat,
+          lng,
+          categories,
+          description,
+          incidentDate,
+          isPrivate,
+          socialMediaConsent,
+          title,
+          ...rest
+        } = values;
         const body = JSON.stringify({
-          ...rest,
-          incidentDate: values.incidentDate.toISOString(),
-          socialMediaConsent: values.socialMediaConsent
+          // ...rest,
+          address,
+          lat,
+          lng,
+          title,
+          description,
+          isPrivate,
+          incidentDate: incidentDate.toISOString(),
+          socialMediaConsent: socialMediaConsent
             ? SocialMediaConstentOptions.ACCEPTED
             : SocialMediaConstentOptions.DECLINED,
-          categories: values.categories.map((str) => JSON.parse(str).id),
+          categories: categories.map((str) => JSON.parse(str).id),
         });
 
         const response = await fetch("http://localhost:3000/api/report", {
@@ -66,16 +93,16 @@ export default function ReportReview({
         setSubmitting(false);
       }}
     >
-      {({ submitForm, isSubmitting }) => (
+      {({ submitForm, isSubmitting, errors }) => (
         <Form>
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h4" component="h1" gutterBottom ml={2}>
             Review
           </Typography>
-          <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4 }}>
+          <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4, maxWidth: '450px' }}>
             <Typography variant={"h5"} mb={1}>
               {formState.title}
             </Typography>
-            
+
             <Grid container mb={1}>
               <Grid item m={0.5} sx={{ display: "flex" }}>
                 <LocationOnIcon />
@@ -86,7 +113,7 @@ export default function ReportReview({
               <Grid item m={0.5} sx={{ display: "flex" }}>
                 <EventIcon />
                 <Typography ml={1} mr={2} variant="caption">
-                  {format(formState.incidentDate, "MM/dd/yyyy")}
+                  {format(formState.incidentDate, "dd/MM/yyyy")}
                 </Typography>
               </Grid>
               <Grid m={0.5} item sx={{ display: "flex" }}>
@@ -115,15 +142,16 @@ export default function ReportReview({
           <Field component={Switch} type="checkbox" name="socialMediaConsent" />
           Allowed to publish on social media
           <br />
+          <Field component={Switch} type="checkbox" name="isPrivate" />
+          I don&apos;t want this to be visible on the website
+          <br />
           <Field
             component={Switch}
             type="checkbox"
             name="canIdentifyOffenders"
           />
           No offenders can be identified from my report
-          <br />
-          <Field component={Switch} type="checkbox" name="isPrivate" />
-          I don&apos;t want this to be visible on the website
+          <FormHelperText sx={{marginLeft: 2}}>{errors.canIdentifyOffenders && "Required"}</FormHelperText>
           <br />
           {isSubmitting && <LinearProgress />}
           {responseStatus >= 300 && (
@@ -134,11 +162,13 @@ export default function ReportReview({
               </Alert>
             </Stack>
           )}
+          <Box display={"flex"} justifyContent={"flex-end"} m={2}>
+
           <Button
             variant="outlined"
             disabled={isSubmitting}
             onClick={handleBackClick}
-          >
+            >
             Back
           </Button>
           <Button
@@ -146,9 +176,11 @@ export default function ReportReview({
             color="primary"
             disabled={isSubmitting}
             onClick={submitForm}
-          >
+            sx={{marginLeft: 1}}
+            >
             Submit
           </Button>
+          </Box>
         </Form>
       )}
     </Formik>

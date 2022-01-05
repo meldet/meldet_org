@@ -1,10 +1,11 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { throttle } from "lodash";
+import { debounce } from "lodash";
 import { getPlaceSuggestions } from "../lib/geocoding";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportFormValues } from "../pages/report";
+import { useCallback } from "react";
 
 export type Location = Partial<ReportFormValues>
 
@@ -14,35 +15,50 @@ export interface ApiLocation {
   longitude: number;
 }
 
+export const randomKey = () => Math.random().toString(36).substring(2, 15)
+
 interface ILocationForm {
   location: Location;
-  setLocation: (formValues: Partial<ReportFormValues>) => void;
+  setLocation: (formValues: Location) => void;
+  error: string | undefined
 }
 
-export default function LocationForm({location, setLocation}: ILocationForm) {
+export default function LocationForm({location, setLocation, error}: ILocationForm) {
 
     const [suggestions, setSuggestions] = React.useState<Location[]>([]);
     const [textfieldValue, setTextfieldValue] = React.useState('')
     const [loading, setLoading] = React.useState(false)
 
-    const fetch = throttle(async (string: string) => {
-      console.log("querying for ", string);
+    const fetch = useCallback(debounce(async (string: string, active: boolean) => {
       const { data: {data}, status }: {status: number, data: {data: ApiLocation[]}} = await getPlaceSuggestions(string);
-      console.log("fetched: ", status, data);
-      status == 200 && data && setSuggestions(data.map(location => ({
-        ...location,
-        address: location.label,
-        lat: String(location.latitude),
-        lng: String(location.longitude)
-      })));
+      if (status == 200 && data) {
+        
+        const mappedAndFiltered = data
+        // sometimes the data comes back with an array of empty arrays instead of actual results.
+        .filter(location => location?.label)
+        .map((location) => ({
+          ...location,
+          address: location.label,
+          lat: String(location.latitude),
+          lng: String(location.longitude),
+          key: randomKey(),
+        }))
+        setSuggestions(mappedAndFiltered);
+        }
+      if (!active) {
+        console.log('...canceling result')
+        return;
+      }
       setLoading(false)
-    }, 500);
+    }, 10), []
+    );
 
     React.useEffect(() => {
+        let active = true;
         if (textfieldValue.length <= 2) return;
-                setLoading(true)
-               fetch(textfieldValue);   
-        return () => {setSuggestions([])}
+              setLoading(true)
+              fetch(textfieldValue, active);   
+        return () => {setSuggestions([]), setLoading(false), active=false}
     }, [textfieldValue])
 
 
@@ -54,24 +70,24 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
         if (typeof newValue == "string" || !newValue) return;
         setLocation({...newValue});
       }}
-      filterOptions={(options: Location[], params) => {
+      filterOptions={(options, params) => {
         const { inputValue } = params;
-        const newOptions = [...options];
 
-        if (inputValue.length >= 3) {
-          newOptions.push({
+        return (inputValue.length >= 3) ? 
+        [...options,
+          {
             address: inputValue,
-          });
-        }
-        return newOptions;
+            key: randomKey(),
+          },
+        ] : options
       }}
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
       id="location"
       options={suggestions}
-      getOptionLabel={(suggestion: Location) => suggestion.address || ''}
-      //   renderOption={(props, option) => <li {...props}>{option.title}</li>}
+      renderOption={(props, option) => <li {...props} key={option.key}>{option.address}</li>}
+      getOptionLabel={((suggestion: Location) => suggestion.address || '')}
       freeSolo
       renderInput={(params) => (
         <TextField
@@ -80,6 +96,8 @@ export default function LocationForm({location, setLocation}: ILocationForm) {
           onChange={(e: any) => {
             setTextfieldValue(e.target.value);
           }}
+          error={!!error && !location.address}
+          helperText={!location.address && error}
           InputProps={{
             ...params.InputProps,
             endAdornment: (

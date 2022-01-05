@@ -15,7 +15,7 @@ import { TextField, Select } from "formik-mui";
 import { DateTimePicker } from "formik-mui-lab";
 import * as React from "react";
 import { ReportFormValues, ReportSteps } from "../pages/report";
-import LocationForm, { Location } from "./LocationForm";
+import LocationForm from "./LocationForm";
 import ReportMapPicker from "./ReportMapPicker";
 
 
@@ -49,10 +49,9 @@ export default function ReportForm({
           errors.categories = "Required";
         } else if (!values.incidentDate) {
           errors.incidentDate = "Required";
+        } else if (!formState.address) {
+          errors.address = "Required";
         } 
-        // else if (!values.address) {
-        //   errors.address = "Required";
-        // }
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -66,21 +65,42 @@ export default function ReportForm({
         handleStepChange("review");
       }}
     >
-      {({ submitForm, isSubmitting }) => (
+      {({ submitForm, isSubmitting, errors }) => (
         <Grid item xs={12} md={4}>
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h4" component="h1" gutterBottom ml={2}>
             Report
           </Typography>
           <Form>
             <FormControl sx={{ p: 2, m: 0, width: "100%" }}>
               <Grid container item spacing={3}>
                 <Grid item xs={12}>
-                  <LocationForm location={formState} setLocation={handleFormSubmit} />
+                  <Field
+                    component={TextField}
+                    type="text"
+                    label="Title*"
+                    name="title"
+                    fullWidth
+                    autoFocus
+                  />
                 </Grid>
 
-                {isMobile && <ReportMapPicker />}
 
                 <Grid item xs={12}>
+                  <LocationForm
+                    location={formState}
+                    setLocation={handleFormSubmit}
+                    error={errors.address}
+                  />
+                </Grid>
+
+                {isMobile && (
+                  <ReportMapPicker
+                    formState={formState}
+                    handleFormSubmit={handleFormSubmit}
+                  />
+                )}
+
+                <Grid item container xs={12}>
                   <Field
                     component={Select}
                     multiple
@@ -96,7 +116,6 @@ export default function ReportForm({
                         id="categories-input"
                         label="categories*"
                         fullWidth
-                        sx={{ minWidth: "100%" }}
                       />
                     }
                     renderValue={(selected: string[]) => (
@@ -105,7 +124,6 @@ export default function ReportForm({
                           display: "flex",
                           flexWrap: "wrap",
                           gap: 0.5,
-                          width: "100%"
                         }}
                       >
                         {selected.map((value: string) => (
@@ -136,10 +154,10 @@ export default function ReportForm({
                   </Field>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item container xs={12}>
                   <Field
                     component={DateTimePicker}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", flexGrow: 1 }}
                     label="Date"
                     name="incidentDate"
                     maxDate={new Date()}
@@ -155,16 +173,6 @@ export default function ReportForm({
                 <Grid item xs={12}>
                   <Field
                     component={TextField}
-                    type="text"
-                    label="Title*"
-                    name="title"
-                    fullWidth
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Field
-                    component={TextField}
                     multiline
                     minRows={6}
                     fullWidth
@@ -173,7 +181,7 @@ export default function ReportForm({
                     type="text"
                   />
                 </Grid>
-                <Grid item justifySelf={"flex-end"} xs={12}>
+                <Grid item container justifyContent={"flex-end"} xs={12}>
                   <Button
                     variant="contained"
                     color="primary"

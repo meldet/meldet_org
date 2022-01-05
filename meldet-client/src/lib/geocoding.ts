@@ -11,3 +11,23 @@ export async function getPlaceSuggestions(query: string) {
         console.error(err)
     }
 }
+
+export interface ReverseGeocodingResponse {
+    latitude: number,
+    longitude: number,
+    type: string,
+    distance: number,
+    label: string,
+    map_url: string,
+}
+
+export async function getReverseGeocoding(lat: number, lng: number) {
+    const url = new URL(`/api/geocoding/reverse?lat=${lat}&lng=${lng}`, config.apiUrl)
+    try {
+        const response: {data: ReverseGeocodingResponse, status: number} = await axios.get(url.href)
+        console.log(response)
+        return response.data
+    } catch(err) {
+        console.error(err)
+    }
+}

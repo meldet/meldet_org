@@ -9,6 +9,7 @@ import Navigation from "../components/Navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ReportsFilter from "../components/ReportsFilter";
 import { UiContext } from "../lib/context";
+import Map from "../components/Map";
 
 
 const drawerWidth = 240;
@@ -39,7 +40,16 @@ const Index = () => {
     <UiContext.Consumer>
       {({ isMobile }) => (
         <Grid container flexDirection="column" alignItems={"flex-end"}>
-          <Navigation></Navigation>
+          {/* <Map
+            layers={[
+            //   createScatterplotLayer(
+            //     reports,
+            //     handleReportHover,
+            //     HandleReportClick
+            //   ),
+            ]}
+          /> */}
+          <Navigation />
           <ReportsFilter />
 
           <Drawer

@@ -1,8 +1,6 @@
 import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import Navigation from "../components/Navigation";
-import { Grid, Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import ReportForm from "../components/ReportForm";
 import { useRouter } from "next/router";
 import { Category, Report as ReportModel } from "@prisma/client";
@@ -12,6 +10,7 @@ import { fetchCategories } from "../lib/helpers";
 import { GetStaticProps } from "next";
 import { UiContext } from "../lib/context";
 import ReportMapPicker from "../components/ReportMapPicker";
+import { randomKey } from "../components/LocationForm";
 
 export type ReportSteps = 'report' | 'review' | 'contact' | 'success' // TODO: this could become an enum, but it might prove a bit tricky
 
@@ -20,6 +19,7 @@ export type ReportFormValues = Omit<ReportModel, "id" | "statusChanges" | "creat
   incidentDate: Date
   socialMediaConsent: boolean
   categories: string[]
+  key: string
 };
 
 const reportFormDefault = {
@@ -33,6 +33,7 @@ const reportFormDefault = {
   socialMediaConsent: true  ,
   canIdentifyOffenders: false,
   isPrivate: false,
+  key: randomKey()
 };
 
 interface IReport {
@@ -85,7 +86,13 @@ export default function Report({categories}: IReport) {
                 />
               )}
               {step == "success" && <ReportFormSuccess />}
-              {!isMobile && <ReportMapPicker />}
+              {!isMobile && step == "report" && (
+                <ReportMapPicker
+                  formState={formState}
+                  handleFormSubmit={handleFormSubmit}
+                  // handleStepChange={handleStepChange}
+                />
+              )}
             </Grid>
           </Grid>
         )}
