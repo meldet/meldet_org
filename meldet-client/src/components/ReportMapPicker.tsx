@@ -2,7 +2,7 @@ import * as React from "react";
 import { Box, Grid } from "@mui/material";
 import Map, { Viewport } from "./Map";
 import { ReportFormValues } from "../pages/report";
-import { getReverseGeocoding } from "../lib/geocoding";
+import { getReverseGeocoding } from "../lib/uiDataFetching";
 import { MapEvent, Marker } from "react-map-gl";
 import Pin from '../lib/Pin'
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { debounce } from "lodash";
-import { getPlaceSuggestions } from "../lib/geocoding";
+import { getPlaceSuggestions } from "../lib/uiDataFetching";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ReportFormValues } from "../pages/report";
 import { useCallback } from "react";

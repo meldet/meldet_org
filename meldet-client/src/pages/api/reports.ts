@@ -1,12 +1,14 @@
 import { Category, SocialMediaConstentOptions } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../prisma/prisma'
+import { fetchReports } from '../../lib/helpers'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   console.log(req.method)
 
 switch (req.method) {
+  /* create a new report */
   case 'POST':
 
     try {
@@ -32,10 +34,16 @@ switch (req.method) {
 
     }
     break;
-
+  /* get all reports */
   case 'GET':
-    console.log('getting get')
-    res.status(200).json({ name: 'John Doe' })
+    console.log('getting reports')
+    try {
+      const response = await fetchReports()
+      res.status(200).json(response)
+    } catch(err) {
+      console.log('that went very wrong: ', err)
+      res.status(500).json({errorMessage: 'request not correctly formed'})
+    }
 
     break;
 

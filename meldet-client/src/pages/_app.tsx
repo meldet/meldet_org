@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../createEmotionCache";
-import { UiContext } from "../lib/context";
+import { FilterValues, initialFilterValues, UiContext } from "../lib/context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -21,18 +21,54 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
+
 export default function MyApp({
   Component,
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: MyAppProps) {
-  const [state, setState] = React.useState({ isMobile: true });
+  // UiState 
+  const setFilterValues = (values: Partial<FilterValues>) => {
+    setUiState({
+      ...UiState, 
+      filterValues: {...UiState.filterValues, ...values}})
+  }
+  
+  const [UiState, setUiState] = React.useState({ 
+    isMobile: true,
+    filterValues: initialFilterValues, 
+    setFilterValues
+  });
+  
   const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
-
+  
   React.useEffect(() => {
-    setState({ ...state, isMobile });
+    setUiState({ ...UiState, isMobile });
   }, [isMobile]);
+  React.useEffect(() => {
+    console.log('new state', UiState)
+  }, [UiState]);
 
+  // DataState
+  // currently not used, because the data is loaded directly via getInitialProps in pages/index.tsx
+  // // make sure you only fetch reports when they are not in a session yet
+  // React.useEffect(() => {
+  //   const storedReports = getSessionStorage('reports')
+  //   if (storedReports) return;
+
+  //   const fetchData = async () => {
+  //     const {data} = await getReports()
+  //     setSessionStorage('reports', data)
+  //   }
+  //   fetchData()
+  //   return () => {
+  //     console.log('cleaning storage')
+  //     clearSessionStorage()
+  //   }
+  // }, [])
+
+
+  
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -41,7 +77,8 @@ export default function MyApp({
       </Head>
       <LocalizationProvider locale={nlBE} dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <UiContext.Provider value={state}>
+          <UiContext.Provider value={UiState}>
+
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
               <Component {...pageProps} />

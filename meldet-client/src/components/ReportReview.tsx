@@ -19,6 +19,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { format } from "date-fns";
+import { submitReport } from "../lib/uiDataFetching";
 
 interface IReportForm {
   formState: ReportFormValues;
@@ -60,7 +61,8 @@ export default function ReportReview({
           title,
           ...rest
         } = values;
-        const body = JSON.stringify({
+
+        const response = await submitReport({
           // ...rest,
           address,
           lat,
@@ -74,15 +76,7 @@ export default function ReportReview({
             : SocialMediaConstentOptions.DECLINED,
           categories: categories.map((str) => JSON.parse(str).id),
         });
-
-        const response = await fetch("http://localhost:3000/api/report", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body,
-        });
+        
         console.log(response);
         setResponseStatus(response.status);
         if (response.status < 300) {
