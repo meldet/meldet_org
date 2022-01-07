@@ -1,7 +1,7 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
 import { IconButton } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/filterList";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import ReportsFilter from "./ReportsFilter";
 
 
