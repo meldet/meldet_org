@@ -25,26 +25,26 @@ export default function ReportsFilterButton() {
 
   return (
     
-            <div>
-              <IconButton aria-describedby={id} onClick={togglePopover}>
-                <FilterListIcon />
-              </IconButton>
+    <div>
+      <IconButton aria-describedby={id} onClick={togglePopover}>
+        <FilterListIcon />
+      </IconButton>
 
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                sx={{ padding: 2, maxWidth: 450 }}
-              >
-                <ReportsFilter handleClose={handleClose} />
-                
-              </Popover>
-            </div>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        sx={{ padding: 2, maxWidth: 450, }}
+      >
+        <ReportsFilter handleClose={handleClose} />
+        
+      </Popover>
+    </div>
           
   );
 }

@@ -1,6 +1,7 @@
 
-import { Category, Report } from "@prisma/client";
+import { Category } from "@prisma/client";
 import React from "react";
+import { ReportWithCat } from "./uiDataFetching";
 
 export interface FilterValues {
   search: string,
@@ -11,11 +12,11 @@ export interface FilterValues {
 export interface IUiContext {
   isMobile: boolean,
   filterValues: FilterValues,
-  setFilterValues: (filterValues: Partial<FilterValues>) => void  
+  setFilterValues: (filterValues: FilterValues) => void  
 }
 
 export const initialFilterValues: FilterValues = {
-    search: "test",
+    search: "",
     from: new Date("2000-01-01"),
     to: new Date(),
     categories: [],
@@ -24,7 +25,7 @@ export const initialFilterValues: FilterValues = {
 export const UiContext = React.createContext<IUiContext>({
   isMobile: true,
   filterValues: initialFilterValues,
-  setFilterValues: (filterValues: Partial<FilterValues>) => {}
+  setFilterValues: (filterValues: FilterValues) => {}
 //   isNavigationOpen: false,
 //   toggleNavigation: () => {},
 //   isFilterOpen: false,
@@ -42,9 +43,9 @@ export const UiContext = React.createContext<IUiContext>({
 });
 
 export const DataContext = React.createContext<{
-  reports: Report[], 
+  reports: ReportWithCat[], 
   categories: Category[],
-  filteredReports: Report[],
+  filteredReports: ReportWithCat[],
   applyReportsFilter: (v: FilterValues) => void
 }> ({
   reports: [],

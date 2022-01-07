@@ -1,4 +1,4 @@
-import { Report } from "@prisma/client";
+import { Report, Category } from "@prisma/client";
 import { config } from "../config";
 const axios = require('axios');
 
@@ -22,6 +22,8 @@ export interface ReverseGeocodingResponse {
     map_url: string,
 }
 
+export type ReportWithCat = Report & { categories: Category[] }
+
 export async function getReverseGeocoding(lat: number, lng: number) {
     const url = new URL(`/api/geocoding/reverse?lat=${lat}&lng=${lng}`, config.apiUrl)
     try {
@@ -38,7 +40,7 @@ export async function getReports() {
     try {
         const response = await axios.get(url.href)
         console.log(response)
-        return response
+        return response as ReportWithCat[]
     } catch(err) {
         console.error(err)
     }

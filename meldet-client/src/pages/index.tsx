@@ -13,6 +13,8 @@ import Map from "../components/Map";
 import { GetStaticProps } from "next";
 import { fetchReports, fetchCategories } from "../lib/helpers";
 import { Category, Report } from "@prisma/client";
+import { reportsFilter } from "../lib/reportsFilter";
+import { ReportWithCat } from "../lib/uiDataFetching";
 
 
 const drawerWidth = 240;
@@ -28,9 +30,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 interface Props {
   categories: Category[]
-  reports: Report[]
+  reports: ReportWithCat[]
 }
-const Index = ({categories, reports}: Props) => {
+const Index = ({categories, reports: rawReports}: Props) => {
   
   // opening and closing drawer stuff
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
@@ -43,17 +45,22 @@ const Index = ({categories, reports}: Props) => {
   };
 
   // DataState
-  const [filteredReports, setFilteredReports] = React.useState<Report[]>([]);
+  const [reports, setReports] = React.useState<ReportWithCat[]>([]);
+  const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>([]);
+
+  React.useEffect(() => {
+    setReports(rawReports)
+  }, [rawReports])
 
   const applyReportsFilter = (filterValues: FilterValues) => {
-    const filteredValues = [...reports] // ...
-    setFilteredReports(filteredValues)
-    console.log('new reports are ... ', filteredReports)
+    setFilteredReports(
+      [...reportsFilter(reports, filterValues)]
+    );
   }
 
-  // React.useEffect(() => {
-  //   setReports
-  // }, [reports])
+  React.useEffect(() => {
+    console.log('new reports', filteredReports)
+  }, [filteredReports])
 
   return (
     <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter}}>

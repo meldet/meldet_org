@@ -28,10 +28,10 @@ export default function MyApp({
   pageProps,
 }: MyAppProps) {
   // UiState 
-  const setFilterValues = (values: Partial<FilterValues>) => {
+  const setFilterValues = (values: FilterValues) => {
     setUiState({
       ...UiState, 
-      filterValues: {...UiState.filterValues, ...values}})
+      filterValues: values})
   }
   
   const [UiState, setUiState] = React.useState({ 
@@ -45,9 +45,7 @@ export default function MyApp({
   React.useEffect(() => {
     setUiState({ ...UiState, isMobile });
   }, [isMobile]);
-  React.useEffect(() => {
-    console.log('new state', UiState)
-  }, [UiState]);
+
 
   // DataState
   // currently not used, because the data is loaded directly via getInitialProps in pages/index.tsx
