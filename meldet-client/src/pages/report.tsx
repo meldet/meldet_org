@@ -106,12 +106,10 @@ export const getStaticProps: GetStaticProps = async ({}) => {
   if (!categories) {
     return {
       notFound: true,
-      revalidate: 60 * 15,
     };
   }
 
   return {
     props: { categories },
-    revalidate: 60 * 15, // rebuild the site every 15 minutes with the latest data
   };
 };
