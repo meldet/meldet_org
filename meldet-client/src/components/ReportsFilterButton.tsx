@@ -1,7 +1,6 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import { Box, Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/filterList";
 import ReportsFilter from "./ReportsFilter";
 
