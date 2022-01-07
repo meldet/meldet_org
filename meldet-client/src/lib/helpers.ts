@@ -6,7 +6,7 @@ import prisma from "../../prisma/prisma"
  * @param {number} limit
  */
 export const fetchReports = async (limit = 20) => {
-    return await prisma.report.findMany({
+    const response = await prisma.report.findMany({
         orderBy: {createdAt: 'desc'},
         take: limit,
         select: {
@@ -29,13 +29,17 @@ export const fetchReports = async (limit = 20) => {
             statusChanges: false, // Not relevant
         }
     })
+    prisma.$disconnect()
+    return response
 }
 
 /** 
  * Fetch the categories from the database.
  */
 export const fetchCategories = async () => {
-    return await prisma.category.findMany({
+    const response = await prisma.category.findMany({
         orderBy: {name: 'asc'}
     })
+    prisma.$disconnect()
+    return response
 }
