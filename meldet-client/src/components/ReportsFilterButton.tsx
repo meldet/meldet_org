@@ -23,8 +23,7 @@ export default function ReportsFilterButton() {
   const id = open ? "reports-filter-popover" : undefined;
 
   return (
-    
-    <div>
+    <>
       <IconButton aria-describedby={id} onClick={togglePopover}>
         <FilterListIcon />
       </IconButton>
@@ -38,12 +37,11 @@ export default function ReportsFilterButton() {
           vertical: "bottom",
           horizontal: "left",
         }}
-        sx={{ padding: 2, maxWidth: 450, }}
-      >
+        sx={{ padding: 2}}
+        >
         <ReportsFilter handleClose={handleClose} />
-        
       </Popover>
-    </div>
+        </>
           
   );
 }
