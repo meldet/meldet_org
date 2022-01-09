@@ -65,10 +65,6 @@ const Index = ({categories, reports}: Props) => {
     reports.length > 0 ? handleDrawerOpen() : handleDrawerClose()
   }
 
-  React.useEffect(() => {
-    console.log('new reports', filteredReports)
-  }, [filteredReports])
-
   return (
     <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter, selectedReports, applySelectedReports}}>
       <UiContext.Consumer>
@@ -97,8 +93,12 @@ const Index = ({categories, reports}: Props) => {
                   <ChevronLeftIcon />
                 </IconButton>
               </DrawerHeader>
-
-              <Report {...selectedReports[0]} />
+              {
+                selectedReports.map(report => (
+                  <Report key={report.id} {...report} />
+                ))
+              }
+              {/* <Report {...selectedReports[0]} /> */}
             </Drawer>
           </Grid>
         )}

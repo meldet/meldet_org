@@ -7,7 +7,6 @@ import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function Report({title, address, incidentDate, description, categories}: ReportWithCat) {
-  console.log(incidentDate, )
     return (
         <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4, maxWidth: '450px' }}>
             <Typography variant={"h5"} mb={1}>
