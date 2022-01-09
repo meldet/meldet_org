@@ -15,6 +15,7 @@ import { Category } from "@prisma/client";
 import { reportsFilter } from "../lib/reportsFilter";
 import { ReportWithCat } from "../lib/uiDataFetching";
 import ReportsMap from "../components/ReportsMap";
+import Report from "../components/Report";
 
 
 const drawerWidth = 240;
@@ -47,6 +48,7 @@ const Index = ({categories, reports}: Props) => {
   // DataState
   // const [reports, setReports] = React.useState<ReportWithCat[]>([]);
   const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>([]);
+  const [selectedReports, setSelectedReports] = React.useState<ReportWithCat[]>([]);
 
   React.useEffect(() => {
     applyReportsFilter(initialFilterValues)
@@ -58,24 +60,21 @@ const Index = ({categories, reports}: Props) => {
     );
   }
 
+  const applySelectedReports = (reports: ReportWithCat[]) => {
+    setSelectedReports(reports);
+    reports.length > 0 ? handleDrawerOpen() : handleDrawerClose()
+  }
+
   React.useEffect(() => {
     console.log('new reports', filteredReports)
   }, [filteredReports])
 
   return (
-    <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter}}>
+    <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter, selectedReports, applySelectedReports}}>
       <UiContext.Consumer>
         {({ isMobile }) => (
           <Grid container flexDirection="column" alignItems={"flex-end"}>
-            {/* <Map
-            layers={[
-              //   createScatterplotLayer(
-                //     reports,
-                //     handleReportHover,
-                //     HandleReportClick
-                //   ),
-              ]}
-            /> */}
+
             <ReportsMap />
             <Navigation />
             <ReportsFilterButton />
@@ -99,7 +98,7 @@ const Index = ({categories, reports}: Props) => {
                 </IconButton>
               </DrawerHeader>
 
-              <div>content container</div>
+              <Report {...selectedReports[0]} />
             </Drawer>
           </Grid>
         )}

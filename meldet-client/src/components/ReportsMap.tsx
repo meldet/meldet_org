@@ -1,4 +1,3 @@
-import { HtmlProps } from "next/dist/shared/lib/utils";
 import * as React from "react";
 import { useState, useRef } from "react";
 import MapGL, { Source, Layer, ViewportProps, MapEvent } from "react-map-gl";
@@ -10,6 +9,7 @@ import {
   clusterCountLayer,
   unclusteredPointLayer,
 } from "../lib/layers";
+import { ReportWithCat } from "../lib/uiDataFetching";
 
 const MAPBOX_TOKEN = ""; // Set your mapbox token here
 
@@ -21,42 +21,80 @@ export default function App() {
     pitch: 0,
     bearing: 0,
   });
+
   const mapRef = useRef<any>(null);
 
-  const handleClick = (event: MapEvent) => {
-    try {
-          
-          const feature = event.features && event.features[0];
-          const clusterId: number | undefined = feature && feature.properties.cluster_id;
-        
-        if (clusterId && mapRef.current !== null){
-            const mapboxSource = mapRef.current.getMap().getSource("reports");
-            
-            mapboxSource.getClusterExpansionZoom(clusterId, (err: any, zoom: any) => {
-                if (err) {
-                    return;
-                }
-                
-                setViewport({
-                    ...viewport,
-                    longitude: feature.geometry.coordinates[0],
-                    latitude: feature.geometry.coordinates[1],
-                    zoom,
-                    transitionDuration: 500,
-                });
-            });
+  const flyToLoc = (feature: any) => {
+    const clusterId: number | undefined =
+      feature && feature.properties.cluster_id;
+
+    if (clusterId && mapRef.current !== null) {
+      const mapboxSource = mapRef.current.getMap().getSource("reports");
+
+      mapboxSource.getClusterExpansionZoom(clusterId, (err: any, zoom: any) => {
+        if (err) {
+          return;
         }
 
-        console.log(event.features)
-    } catch(err) {
-        console.log(err)
-        return
+        setViewport({
+          ...viewport,
+          longitude: feature.geometry.coordinates[0],
+          latitude: feature.geometry.coordinates[1],
+          zoom,
+          transitionDuration: 500,
+        });
+      });
     }
   };
 
+  interface Feature {
+      layer: any
+      properties: {
+          reportString: string
+      }
+      state: any
+  }
+
+  interface ClusterFeature extends Feature {
+    properties: {
+        reportString: string
+        cluster: boolean
+        cluster_id: number
+        pointCount: number
+    }
+  }
+
+
+  const setSelectedReport = (feature: ClusterFeature, setValues: (v: ReportWithCat[]) => void) => {
+
+        const isCluster = 
+        feature.properties?.cluster;
+
+        if (isCluster) {
+            
+          const geoJsonSource = mapRef.current.getMap().getSource("reports");
+          geoJsonSource.getClusterLeaves(
+            feature.properties.cluster_id,
+            feature.properties.pointCount,
+            0,
+            (err: any, features: any) => {
+                setValues(
+                    features.map((feature: Feature) => 
+                        JSON.parse(feature.properties.reportString) as ReportWithCat
+                    )
+                )
+            }
+          );
+        } else {
+            // a single feature selected
+            const report: ReportWithCat = JSON.parse(feature.properties.reportString);
+            setValues([report])
+        }
+  }
+
   return (
     <DataContext.Consumer>
-      {({ filteredReports }) => (
+      {({ filteredReports, selectedReports, applySelectedReports }) => (
         <>
           <MapGL
             {...viewport}
@@ -66,27 +104,31 @@ export default function App() {
             mapStyle="mapbox://styles/mapbox/dark-v9"
             onViewportChange={setViewport}
             mapboxApiAccessToken={config.mapboxToken}
-            interactiveLayerIds={[clusterLayer.id || "unclustered-point"]}
-            onClick={handleClick}
+            interactiveLayerIds={["clusters", "unclustered-point"]}
+            onClick={(e: MapEvent) => {
+                try {
+                  const feature: ClusterFeature = e.features && e.features[0];
+                  flyToLoc(feature);
+                  setSelectedReport(feature, applySelectedReports);
+                } catch (err) {
+                  console.log(err);
+                }
+            }}
             ref={mapRef}
           >
             <Source
               id="reports"
               type="geojson"
               data={{
-                  type: "FeatureCollection",
-                  features: filteredReports.map(report => (
-                      {
-                          type: "Feature",
-                          properties: {
-                              ...report
-                          },
-                          geometry: {
-                              type: 'Point',
-                              coordinates: [Number(report.lng), Number(report.lat)]
-                          }
-                    }
-                  ))
+                type: "FeatureCollection",
+                features: filteredReports.map((report) => ({
+                  type: "Feature",
+                  properties: {reportString: JSON.stringify(report)},
+                  geometry: {
+                    type: "Point",
+                    coordinates: [Number(report.lng), Number(report.lat)],
+                  },
+                })),
               }}
               cluster={true}
               clusterMaxZoom={14}

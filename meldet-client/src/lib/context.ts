@@ -47,9 +47,13 @@ export const DataContext = React.createContext<{
   categories: Category[],
   filteredReports: ReportWithCat[],
   applyReportsFilter: (v: FilterValues) => void
+  selectedReports: ReportWithCat[],
+  applySelectedReports: (r: ReportWithCat[]) => void
 }> ({
   reports: [],
   categories: [],
   filteredReports: [],
-  applyReportsFilter: () => {}
+  applyReportsFilter: () => {},
+  selectedReports: [],
+  applySelectedReports: () => {}
 })

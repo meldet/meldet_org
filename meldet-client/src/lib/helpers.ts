@@ -29,7 +29,7 @@ export const fetchReports = async (limit = 5000) => {
             statusChanges: false, // Not relevant
         }
     })
-    // prisma.$disconnect()
+    prisma.$disconnect()
     return response.map((report) => ({
       ...report,
       // put a random offset on the location to 
@@ -47,6 +47,6 @@ export const fetchCategories = async () => {
     const response = await prisma.category.findMany({
         orderBy: {name: 'asc'}
     })
-    // prisma.$disconnect()
+    prisma.$disconnect()
     return response
 }
