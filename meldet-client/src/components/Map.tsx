@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect } from "react";
 import MapGL, { MapEvent, FlyToInterpolator } from "react-map-gl";
 import { useState } from "react";
-import { Box } from "@mui/system";
 import { config } from "../config";
 
 export interface Viewport {
@@ -18,7 +17,7 @@ export interface Viewport {
 interface Props {
   layers: any[];
   handleMapClick: (evt: MapEvent) => any
-  flyToCoord: Partial<Viewport>
+  flyToCoord?: Partial<Viewport>
 }
 
 const Map: FunctionComponent<Props> = ({ handleMapClick, flyToCoord, children }) => {
@@ -34,7 +33,7 @@ const Map: FunctionComponent<Props> = ({ handleMapClick, flyToCoord, children })
   });
 
   useEffect(() => {
-    if (!flyToCoord.latitude && !flyToCoord.longitude) return;
+    if (!flyToCoord?.latitude && !flyToCoord?.longitude) return;
     setViewport({
       ...viewport,
       ...flyToCoord,

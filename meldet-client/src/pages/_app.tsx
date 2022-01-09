@@ -28,9 +28,13 @@ export default function MyApp({
   pageProps,
 }: MyAppProps) {
   // UiState 
+  
+  const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
+
   const setFilterValues = (values: FilterValues) => {
     setUiState({
       ...UiState, 
+      isMobile,
       filterValues: values})
   }
   
@@ -40,7 +44,6 @@ export default function MyApp({
     setFilterValues
   });
   
-  const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
   
   React.useEffect(() => {
     setUiState({ ...UiState, isMobile });

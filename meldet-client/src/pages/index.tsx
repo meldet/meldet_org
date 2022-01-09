@@ -8,13 +8,13 @@ import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ReportsFilterButton from "../components/ReportsFilterButton";
-import { DataContext, FilterValues, UiContext } from "../lib/context";
-import Map from "../components/Map";
+import { DataContext, FilterValues, initialFilterValues, UiContext } from "../lib/context";
 import { GetStaticProps } from "next";
 import { fetchReports, fetchCategories } from "../lib/helpers";
-import { Category, Report } from "@prisma/client";
+import { Category } from "@prisma/client";
 import { reportsFilter } from "../lib/reportsFilter";
 import { ReportWithCat } from "../lib/uiDataFetching";
+import ReportsMap from "../components/ReportsMap";
 
 
 const drawerWidth = 240;
@@ -32,7 +32,7 @@ interface Props {
   categories: Category[]
   reports: ReportWithCat[]
 }
-const Index = ({categories, reports: rawReports}: Props) => {
+const Index = ({categories, reports}: Props) => {
   
   // opening and closing drawer stuff
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
@@ -45,12 +45,12 @@ const Index = ({categories, reports: rawReports}: Props) => {
   };
 
   // DataState
-  const [reports, setReports] = React.useState<ReportWithCat[]>([]);
+  // const [reports, setReports] = React.useState<ReportWithCat[]>([]);
   const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>([]);
 
   React.useEffect(() => {
-    setReports(rawReports)
-  }, [rawReports])
+    applyReportsFilter(initialFilterValues)
+  }, [])
 
   const applyReportsFilter = (filterValues: FilterValues) => {
     setFilteredReports(
@@ -76,6 +76,7 @@ const Index = ({categories, reports: rawReports}: Props) => {
                 //   ),
               ]}
             /> */}
+            <ReportsMap />
             <Navigation />
             <ReportsFilterButton />
 

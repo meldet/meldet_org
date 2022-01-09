@@ -7,6 +7,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Paper,
   styled,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -54,14 +55,16 @@ export default function Navigation({ children }: { children?: any }) {
   return (
     <UiContext.Consumer>
       {({ isMobile }) => (
+        <Paper elevation={2} sx={{zIndex: "appBar"}}>
         <Grid
           container
           justifyContent={"flex-end"}
           alignContent="center"
           alignItems="baseline"
           sx={{ p: 2 }}
+          
           alignSelf="flex-end"
-        >
+          >
           <Link href="/report" sx={{ marginRight: 4, marginLeft: 4 }}>
             <Button variant="contained">Report</Button>
           </Link>
@@ -73,7 +76,7 @@ export default function Navigation({ children }: { children?: any }) {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
-              >
+                >
                 <MenuIcon fontSize="large" />
               </IconButton>
               <Menu
@@ -92,7 +95,7 @@ export default function Navigation({ children }: { children?: any }) {
                   vertical: "top",
                   horizontal: "right",
                 }}
-              >
+                >
                 {links.map((link) => (
                   <MenuItem key={link.href} onClick={handleClose}>
                     <Link href={link.href} color="primary">
@@ -105,18 +108,19 @@ export default function Navigation({ children }: { children?: any }) {
           ) : (
             links.map((link) => (
               <Grid
-                item
-                key={link.href}
-                alignSelf="center"
-                sx={{ marginRight: 2 }}
+              item
+              key={link.href}
+              alignSelf="center"
+              sx={{ marginRight: 2 }}
               >
                 <Link href={link.href} color="primary">
                   {link.caption}
                 </Link>
               </Grid>
             ))
-          )}
+            )}
         </Grid>
+      </Paper>
       )}
     </UiContext.Consumer>
   );
