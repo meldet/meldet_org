@@ -1,11 +1,11 @@
 import prisma from "../../prisma/prisma"
 
-
+const randomOffset = () => (Math.random() - 0.5) / 20000;
 /** 
  * Fetch the latest reports that are added from the database.
  * @param {number} limit
  */
-export const fetchReports = async (limit = 20) => {
+export const fetchReports = async (limit = 5000) => {
     const response = await prisma.report.findMany({
         orderBy: {createdAt: 'desc'},
         take: limit,
@@ -30,7 +30,14 @@ export const fetchReports = async (limit = 20) => {
         }
     })
     prisma.$disconnect()
-    return response
+    return response.map((report) => ({
+      ...report,
+      // put a random offset on the location to 
+      // 1. give a bit of privacy 
+      // 2. make sure not all dots on the same address overlap
+      lat: String(Number(report.lat) + randomOffset()),
+      lng: String(Number(report.lng) + randomOffset()),
+    }));
 }
 
 /** 
