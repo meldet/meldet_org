@@ -24,6 +24,16 @@ export default function ReportsFilter({
 }: {
   handleClose: () => void;
 }) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleCloseSelect = () => {
+    setOpen(false);
+  };
+
+  const handleOpenSelect = () => {
+    setOpen(true);
+  };
+
   return (
     <UiContext.Consumer>
       {({ filterValues, setFilterValues, isMobile }) => (
@@ -135,7 +145,11 @@ export default function ReportsFilter({
                   label="Categories"
                   multiple
                   input={<OutlinedInput label="categories" />}
+                  open={open}
+                  onOpen={handleOpenSelect}
+                  onClose={handleCloseSelect}
                   onChange={(e) => {
+                    setOpen(false)
                     setFilterValues({
                       ...filterValues,
                       categories: typeof e.target.value == 'string' 

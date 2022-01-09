@@ -36,7 +36,7 @@ export default function ReportForm({
   isMobile
 }: IReportForm) {
   
-
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Formik
@@ -51,7 +51,7 @@ export default function ReportForm({
           errors.incidentDate = "Required";
         } else if (!formState.address) {
           errors.address = "Required";
-        } 
+        }
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -65,7 +65,7 @@ export default function ReportForm({
         handleStepChange("review");
       }}
     >
-      {({ submitForm, isSubmitting, errors }) => (
+      {({ submitForm, isSubmitting, errors, setFieldValue }) => (
         <Grid item xs={12} md={4}>
           <Typography variant="h4" component="h1" gutterBottom ml={2}>
             Report
@@ -83,7 +83,6 @@ export default function ReportForm({
                     autoFocus
                   />
                 </Grid>
-
 
                 <Grid item xs={12}>
                   <LocationForm
@@ -118,6 +117,9 @@ export default function ReportForm({
                         fullWidth
                       />
                     }
+                    open={open}
+                    onOpen={() => setOpen(true)}
+                    onClose={() => setOpen(false)}
                     renderValue={(selected: string[]) => (
                       <Box
                         sx={{
@@ -131,6 +133,10 @@ export default function ReportForm({
                         ))}
                       </Box>
                     )}
+                    onChange={(e: any) => {
+                      setOpen(false);
+                      setFieldValue('categories', e.target.value)
+                    }}
                     validate={(values: any[]) =>
                       values.length <= 0 ? "Required" : undefined
                     }
