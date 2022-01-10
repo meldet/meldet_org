@@ -6,16 +6,19 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ReportsFilter from "../components/ReportsFilter";
+import CloseIcon from "@mui/icons-material/Close";
+import ReportsFilterButton from "../components/ReportsFilterButton";
+import { DataContext, FilterValues, initialFilterValues, UiContext } from "../lib/context";
 import { GetStaticProps } from "next";
-import { fetchCategories, fetchReports } from "../lib/helpers";
-import { Report } from ".prisma/client";
+import { fetchReports, fetchCategories } from "../lib/helpers";
 import { Category } from "@prisma/client";
-import { UiContext } from "../lib/context";
+import { reportsFilter } from "../lib/reportsFilter";
+import { ReportWithCat } from "../lib/uiDataFetching";
+import ReportsMap from "../components/ReportsMap";
+import Report from "../components/Report";
 
 
-const drawerWidth = 240;
+const drawerWidth = 350;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -26,16 +29,14 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-interface IndexProps {
-  reports: Report[],
-  categories: Category[],
-  notFound?: boolean
+interface Props {
+  categories: Category[]
+  reports: ReportWithCat[]
 }
-
-const Index = ({reports, categories, notFound}: IndexProps) => {
-
+const Index = ({categories, reports}: Props) => {
+  
+  // opening and closing drawer stuff
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -44,49 +45,75 @@ const Index = ({reports, categories, notFound}: IndexProps) => {
     setOpen(false);
   };
 
+  // DataState
+  // const [reports, setReports] = React.useState<ReportWithCat[]>([]);
+  const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>([]);
+  const [selectedReports, setSelectedReports] = React.useState<ReportWithCat[]>([]);
+
+  React.useEffect(() => {
+    applyReportsFilter(initialFilterValues)
+  }, [])
+
+  const applyReportsFilter = (filterValues: FilterValues) => {
+    setFilteredReports(
+      [...reportsFilter(reports, filterValues)]
+    );
+  }
+
+  const applySelectedReports = (reports: ReportWithCat[]) => {
+    setSelectedReports(reports);
+    reports.length > 0 ? handleDrawerOpen() : handleDrawerClose()
+  }
+
   return (
-    <UiContext.Consumer>
-      {({ isMobile }) => (
-        <Grid container flexDirection="column" alignItems={"flex-end"}>
-          <Navigation></Navigation>
-          <ReportsFilter />
+    <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter, selectedReports, applySelectedReports}}>
+      <UiContext.Consumer>
+        {({ isMobile }) => (
+          <Grid container flexDirection="column" alignItems={"flex-end"}>
 
-          <Drawer
-            sx={{
-              width: drawerWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                width: isMobile ? "100%" : drawerWidth,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="persistent"
-            anchor={isMobile ? "bottom" : "left"}
-            open={open}
-          >
-            <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </DrawerHeader>
+            <ReportsMap />
+            <Navigation />
+            <ReportsFilterButton />
 
-            <div>content container</div>
-          </Drawer>
-        </Grid>
-      )}
-    </UiContext.Consumer>
+            <Drawer
+              sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                  width: isMobile ? "100%" : drawerWidth,
+                  boxSizing: "border-box",
+                },
+              }}
+              variant="persistent"
+              anchor={isMobile ? "bottom" : "left"}
+              open={open}
+            >
+              <DrawerHeader>
+                <IconButton onClick={handleDrawerClose}>
+                  <CloseIcon />
+                </IconButton>
+              </DrawerHeader>
+              {
+                selectedReports.map(report => (
+                  <Report key={report.id} {...report} />
+                ))
+              }
+              {/* <Report {...selectedReports[0]} /> */}
+            </Drawer>
+          </Grid>
+        )}
+      </UiContext.Consumer>
+    </DataContext.Provider>
   );
 }
 
 export default Index;
 
-export const getStaticProps: GetStaticProps = async ({
-
-}) => {
-  const reports = await fetchReports()
-  const categories = await fetchCategories()
-
-  if (!reports || !categories) {
+export const getStaticProps: GetStaticProps = async ({}) => {
+  const reports = await fetchReports();
+  const categories = await fetchCategories();
+  
+  if (!categories || !reports) {
     return {
       notFound: true,
       revalidate: 60 * 15,
@@ -94,7 +121,7 @@ export const getStaticProps: GetStaticProps = async ({
   }
 
   return {
-    props: { reports, categories },
+    props: { categories, reports },
     revalidate: 60 * 15, // rebuild the site every 15 minutes with the latest data
   };
-}
+};
