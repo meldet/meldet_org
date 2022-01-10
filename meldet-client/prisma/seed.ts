@@ -1,6 +1,7 @@
 import prisma from "./prisma";
 import mockReports from './reports-seed-data.json'
 import mockCategories from './categories-seed-data.json'
+import { getPlaceSuggestions, getReverseGeocoding } from "../src/lib/uiDataFetching";
 
 const addCategories = async function() {
         const categoriesResult = await prisma.category.createMany({
@@ -11,11 +12,35 @@ const addCategories = async function() {
     console.log('categories added', categoriesResult)
 }
 
-const addReports = async function() {
+const addReports = async function(options: {enhanceLocation?: boolean, enhanceIncidentDate?: boolean}) {
+    
+    const defaultOptions = {
+      enhanceLocation: false,
+      enhanceIncidentDate: false,
+    };
+
+    const { enhanceLocation, enhanceIncidentDate } = {...defaultOptions, ...options};
+
     // insert mock reports 1 by 1, because with createMany you cannot create links to categories as far as I know
     // I know it's not efficient, but it's only seeding data right ;)
     for (let index = 0; index < mockReports.length; index++) {
         const report = mockReports[index];
+        const {lat, lng, address} = report;
+
+        if (enhanceLocation) {
+            // add address if coordinates are there but address is missing
+            if (lat && lng && !address) {
+                const response = await getReverseGeocoding(Number(lat), Number(lng))
+                report.address = response?.label || "";
+            } 
+            // add coordinates from address if they are missing
+            if (address && !lat && !lng) {
+                const response = await getPlaceSuggestions(address)
+                report.lat = String(response?.data[0].latitude)
+                report.lng = String(response?.data[0].longitude)
+            }
+        }
+
 
         const result = await prisma.report.create({
             data: {
@@ -39,7 +64,7 @@ const addReports = async function() {
 async function main() {
     // insert the categories first to have a link in db!
     await addCategories();
-    await addReports();
+    await addReports({enhanceLocation: false});
 
     // query reports to check if it worked
     const getReports = await prisma.report.findMany({

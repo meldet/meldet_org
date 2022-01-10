@@ -55,17 +55,17 @@ export default function Navigation({ children }: { children?: any }) {
   return (
     <UiContext.Consumer>
       {({ isMobile }) => (
-        <Paper elevation={2} sx={{zIndex: "appBar"}}>
+        <Paper elevation={2} sx={{zIndex: "appBar", m: 1}}>
         <Grid
           container
           justifyContent={"flex-end"}
           alignContent="center"
           alignItems="baseline"
-          sx={{ p: 2 }}
+          sx={{ p: isMobile ? 1 : 2 }}
           
           alignSelf="flex-end"
           >
-          <Link href="/report" sx={{ marginRight: 4, marginLeft: 4 }}>
+          <Link noLinkStyle href="/report" sx={{ marginRight: 2, marginLeft: 0 }}>
             <Button variant="contained">Report</Button>
           </Link>
           {isMobile ? (
@@ -76,6 +76,7 @@ export default function Navigation({ children }: { children?: any }) {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
+                sx={{padding: 0}}
                 >
                 <MenuIcon fontSize="large" />
               </IconButton>
@@ -98,9 +99,11 @@ export default function Navigation({ children }: { children?: any }) {
                 >
                 {links.map((link) => (
                   <MenuItem key={link.href} onClick={handleClose}>
-                    <Link href={link.href} color="primary">
+                    <Button color="secondary">
+                    <Link noLinkStyle href={link.href}>
                       {link.caption}
                     </Link>
+                    </Button>
                   </MenuItem>
                 ))}
               </Menu>
@@ -111,11 +114,13 @@ export default function Navigation({ children }: { children?: any }) {
               item
               key={link.href}
               alignSelf="center"
-              sx={{ marginRight: 2 }}
               >
-                <Link href={link.href} color="primary">
+
+                <Button color="secondary">
+                <Link noLinkStyle href={link.href}>
                   {link.caption}
                 </Link>
+                </Button>
               </Grid>
             ))
             )}

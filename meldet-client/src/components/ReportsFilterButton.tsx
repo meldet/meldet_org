@@ -29,9 +29,9 @@ export default function ReportsFilterButton() {
         <>
           <Button
             aria-describedby={id}
-            variant={"contained"}
-            sx={{ margin: 2 }}
-            color="info"
+            variant={"outlined"}
+            sx={{ margin: 1, }}
+            color="primary"
             onClick={togglePopover}
           >
             <Badge

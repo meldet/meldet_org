@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import CloseIcon from "@mui/icons-material/Close";
 import ReportsFilterButton from "../components/ReportsFilterButton";
 import { DataContext, FilterValues, initialFilterValues, UiContext } from "../lib/context";
 import { GetStaticProps } from "next";
@@ -18,7 +18,7 @@ import ReportsMap from "../components/ReportsMap";
 import Report from "../components/Report";
 
 
-const drawerWidth = 240;
+const drawerWidth = 350;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -90,7 +90,7 @@ const Index = ({categories, reports}: Props) => {
             >
               <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
-                  <ChevronLeftIcon />
+                  <CloseIcon />
                 </IconButton>
               </DrawerHeader>
               {

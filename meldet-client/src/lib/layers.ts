@@ -1,3 +1,4 @@
+import { colors } from "@mui/material";
 import { LayerProps } from "react-map-gl";
 
 
@@ -10,11 +11,11 @@ export const clusterLayer: LayerProps = {
     "circle-color": [
       "step",
       ["get", "point_count"],
-      "#51bbd6",
+      colors.lightBlue[200],
       20,
-      "#f1f075",
+      colors.yellow[300],
       100,
-      "#f28cb1",
+      colors.pink[200],
     ],
     "circle-radius": ["step", ["get", "point_count"], 18, 20, 26, 100, 35],
   },
@@ -39,7 +40,7 @@ export const unclusteredPointLayer: LayerProps = {
   source: "reports",
   filter: ["!", ["has", "point_count"]],
   paint: {
-    "circle-color": "#11b4da",
+    "circle-color": colors.lightBlue[200],
     "circle-radius": 8,
     "circle-stroke-width": 1,
     "circle-stroke-color": "#fff",

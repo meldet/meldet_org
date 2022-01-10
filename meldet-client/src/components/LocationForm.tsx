@@ -9,12 +9,6 @@ import { useCallback } from "react";
 
 export type Location = Partial<ReportFormValues>
 
-export interface ApiLocation {
-  label: string;
-  latitude: number;
-  longitude: number;
-}
-
 export const randomKey = () => Math.random().toString(36).substring(2, 15)
 
 interface ILocationForm {
@@ -30,10 +24,10 @@ export default function LocationForm({location, setLocation, error}: ILocationFo
     const [loading, setLoading] = React.useState(false)
 
     const fetch = useCallback(debounce(async (string: string, active: boolean) => {
-      const { data: {data}, status }: {status: number, data: {data: ApiLocation[]}} = await getPlaceSuggestions(string);
-      if (status == 200 && data) {
+      const response = await getPlaceSuggestions(string);
+      if (response?.data && response.data.length > 0) {
         
-        const mappedAndFiltered = data
+        const mappedAndFiltered = response.data
         // sometimes the data comes back with an array of empty arrays instead of actual results.
         .filter(location => location?.label)
         .map((location) => ({

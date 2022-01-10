@@ -68,7 +68,7 @@ export default function App() {
   const setSelectedReport = (feature: ClusterFeature, setValues: (v: ReportWithCat[]) => void) => {
 
         const isCluster = 
-        feature.properties?.cluster;
+        feature?.properties?.cluster;
 
         if (isCluster) {
             
@@ -85,7 +85,7 @@ export default function App() {
                 )
             }
           );
-        } else {
+        } else if (feature?.properties) {
             // a single feature selected
             const report: ReportWithCat = JSON.parse(feature.properties.reportString);
             setValues([report])

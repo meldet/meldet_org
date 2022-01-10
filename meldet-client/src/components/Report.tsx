@@ -7,6 +7,27 @@ import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function Report({title, address, incidentDate, description, categories}: ReportWithCat) {
+  const [date, setDate] = React.useState<{day: String, time: string}>({day: "", time: ""})
+    React.useEffect(() => {
+      
+      const castedIncidentDate = incidentDate as any as Date;
+      if (incidentDate && castedIncidentDate) {
+        try {
+          // test to know incidentDate is a Date object
+          const dateObj = new Date(castedIncidentDate)
+          const dayString = format(dateObj, "k:mm");
+          setDate({
+            day: format(dateObj, "dd/MM/yyyy"),
+            time: dayString == "24:00" ? "" : dayString,
+          });
+        } catch (err) {
+          setDate({
+            day: incidentDate,
+            time: "",
+          });
+        }
+      }
+    }, [incidentDate])
     return (
         <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4, maxWidth: '450px' }}>
             <Typography variant={"h5"} mb={1}>
@@ -20,19 +41,22 @@ export default function Report({title, address, incidentDate, description, categ
                   {address}
                 </Typography>
               </Grid>
-              <Grid item m={0.5} sx={{ display: "flex" }}>
+              {
+              date.day && <Grid item m={0.5} sx={{ display: "flex" }}>
                 <EventIcon />
                 <Typography ml={1} mr={2} variant="caption">
-                  {incidentDate}
-                  {/* {incidentDate && format(new Date(incidentDate), "dd/MM/yyyy")} */}
+                  {date.day}
                 </Typography>
               </Grid>
-              <Grid m={0.5} item sx={{ display: "flex" }}>
+              }
+              {
+              date.time && <Grid m={0.5} item sx={{ display: "flex" }}>
                 <AccessTimeIcon />
                 <Typography ml={1} mr={2} variant="caption">
-                  {/* {incidentDate && format(new Date(incidentDate), "k:mm")} */}
+                  {date.time}
                 </Typography>
               </Grid>
+              }
             </Grid>
             <Typography mb={2} variant="body1">
               {description}
