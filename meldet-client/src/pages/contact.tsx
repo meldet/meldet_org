@@ -1,16 +1,13 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import {
   Alert,
-  FormHelperText,
   Grid,
   Snackbar,
   Stack,
   TextField,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import FormControl, { useFormControl } from "@mui/material/FormControl";
 import Navigation from "../components/Navigation";
 import { sendEmail } from "../lib/uiDataFetching";
 
@@ -83,25 +80,10 @@ export default function Contact() {
   return (
     <Grid container flexDirection="column">
       <Navigation />
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom ml={2}>
+      <Grid sx={{ margin: 2 }} item container xs={12} md={6}>
+        <Typography variant="h4" component="h1" gutterBottom>
           Contact us
         </Typography>
-        {
-          // let errors: {sender: string, body: string} = {sender: "", body: ""}
-          // if (!values.sender) {errors.sender = "Required"}
-          // else if (
-          //   !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.sender)
-          // ) {
-          //   errors.sender = "Invalid email address";
-          // } else if (!values.body) {
-          //   errors.body = "Required"
-          // } else if (values.body.length < 5) {
-          //   errors.body = `An email with less than ${values.body.length} characters? Weird.`
-          // }
-        }
-
-        <Box sx={{ p: 2, m: 0, width: "100%" }}>
           <TextField
             type="text"
             label="Your email address"
@@ -149,6 +131,7 @@ export default function Contact() {
           <LoadingButton
             variant="contained"
             color="primary"
+            sx={{justifySelf: 'flex-end'}}
             loading={isSubmitting}
             disabled={
               isSubmitting ||
@@ -162,8 +145,7 @@ export default function Contact() {
             Send
           </LoadingButton>
 
-        </Box>
-      </Box>
+      </Grid>
     </Grid>
   );
 }
