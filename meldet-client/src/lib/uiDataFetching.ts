@@ -67,3 +67,20 @@ export async function submitReport(report: Partial<Report> & {categories: string
     }
 }
 
+export async function sendEmail({ body, sender }: { body: string; sender: string }) {
+    try {
+
+        const url = new URL(`/api/contact`, config.apiUrl);
+        const response = await axios.post(url.href, {
+            body,
+            sender,
+        });
+        return {status: response.status, msg: response, error: response.data.error}
+    } catch (err: any) {
+        console.log(err)
+        return {
+            status: 500,
+            error: err.message
+        }
+    }
+}
