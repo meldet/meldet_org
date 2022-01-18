@@ -11,7 +11,6 @@ import {
 } from "../lib/layers";
 import { ReportWithCat } from "../lib/uiDataFetching";
 
-const MAPBOX_TOKEN = ""; // Set your mapbox token here
 
 export default function App() {
   const [viewport, setViewport] = useState<ViewportProps>({
@@ -75,8 +74,8 @@ export default function App() {
           const geoJsonSource = mapRef.current.getMap().getSource("reports");
           geoJsonSource.getClusterLeaves(
             feature.properties.cluster_id,
-            feature.properties.pointCount,
-            0,
+            100, // limit of the amount of reports to fetch. Higher slows down performance
+            0, // offset -> could be used for pagination
             (err: any, features: any) => {
                 setValues(
                     features.map((feature: Feature) => 
