@@ -1,0 +1,9 @@
+## This is an example of the SQL query we need to do for 
+## generating a datadump of the reports out of the old wordpress database
+## The WHERE clause is to filter out some illegitimate entries
+
+SELECT time.value as date, main.*
+FROM `wp_wpgmza` AS main
+INNER JOIN `wp_wpgmza_markers_has_custom_fields` AS time
+ON time.object_id=main.id
+WHERE main.latlng!=`0x000000000101000000000000000000f03f000000000000f03f`
