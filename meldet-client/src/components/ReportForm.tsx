@@ -46,8 +46,6 @@ export default function ReportForm({
         const errors: any = {};
         if (!values.title) {
           errors.title = "required";
-        } else if (!values.categories) {
-          errors.categories = "required";
         } else if (!values.incidentDate) {
           errors.incidentDate = "required";
         } else if (!formState.address) {
@@ -100,6 +98,18 @@ export default function ReportForm({
                   />
                 )}
 
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    multiline
+                    minRows={6}
+                    fullWidth
+                    label="Description"
+                    name="description"
+                    type="text"
+                  />
+                </Grid>
+
                 <Grid item container xs={12}>
                   <Field
                     component={Select}
@@ -110,7 +120,7 @@ export default function ReportForm({
                     id="categories"
                     name="categories"
                     labelId="categories"
-                    label="categories*"
+                    label="categories"
                     input={
                       <OutlinedInput
                         id="categories-input"
@@ -176,7 +186,8 @@ export default function ReportForm({
                     name="incidentDate"
                     maxDate={new Date()}
                     textField={{
-                      helperText: "this is the date of the incident",
+                      helperText:
+                        "this is the approximate date of the incident",
                     }}
                     validate={(values: Date | undefined) =>
                       !values ? "required" : undefined
@@ -184,17 +195,6 @@ export default function ReportForm({
                   />
                 </Grid>
 
-                <Grid item xs={12}>
-                  <Field
-                    component={TextField}
-                    multiline
-                    minRows={6}
-                    fullWidth
-                    label="Description"
-                    name="description"
-                    type="text"
-                  />
-                </Grid>
                 <Grid item container justifyContent={"flex-end"} xs={12}>
                   <Button
                     variant="contained"
