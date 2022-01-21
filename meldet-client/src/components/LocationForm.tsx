@@ -86,7 +86,7 @@ export default function LocationForm({location, setLocation, error}: ILocationFo
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Location*"
+          label="location*"
           onChange={(e: any) => {
             setTextfieldValue(e.target.value);
           }}

@@ -82,11 +82,11 @@ export default function Contact() {
       <Navigation />
       <Grid sx={{ margin: 2 }} item container xs={12} md={6}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Contact us
+          contact us
         </Typography>
           <TextField
             type="text"
-            label="Your email address"
+            label="your email address"
             name="sender"
             fullWidth
             autoFocus
@@ -103,7 +103,7 @@ export default function Contact() {
             minRows={6}
             fullWidth
             required
-            label="Message"
+            label="message"
             name="body"
             type="text"
             margin="normal"

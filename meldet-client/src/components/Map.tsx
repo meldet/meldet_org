@@ -1,7 +1,8 @@
-import React, { FunctionComponent, useEffect } from "react";
+/* eslint-disable react/display-name */
+import React, { useContext, useEffect } from "react";
 import MapGL, { MapEvent, FlyToInterpolator } from "react-map-gl";
-import { useState } from "react";
 import { config } from "../config";
+import { UiContext } from "../lib/context";
 
 export interface Viewport {
   longitude: number;
@@ -15,50 +16,40 @@ export interface Viewport {
 }
 
 interface Props {
-  layers: any[];
+  children: any,
   handleMapClick: (evt: MapEvent) => any
-  flyToCoord?: Partial<Viewport>
+  interactiveLayerIds?: string[]
+  ref?: any
+  style?: any
+  width?: string
+  height?: string
 }
 
-const Map: FunctionComponent<Props> = ({ handleMapClick, flyToCoord, children }) => {
-  
-  // Viewport settings center on Gent, hardcoded
-  // TODO use browser location to set initial viewport
-  const [viewport, setViewport] = useState<Viewport>({
-    longitude: 3.720367,
-    latitude: 51.053075,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0,
-  });
+const Map = React.forwardRef<any, Props>((props, ref) => {
 
-  useEffect(() => {
-    if (!flyToCoord?.latitude && !flyToCoord?.longitude) return;
-    setViewport({
-      ...viewport,
-      ...flyToCoord,
-      transitionDuration: 500,
-      transitionInterpolator: new FlyToInterpolator(),
-      // transitionEasing: d3.easeCubic,
-    });
-  }, [flyToCoord])
+  const { handleMapClick, children, interactiveLayerIds = [], style={}, width = '100%', height = '100%' } = props
+
+
+  const {viewport, setViewport} = useContext(UiContext)
 
 
   return (
-    
-      <MapGL
+
+        <MapGL
         {...viewport}
-        width="100%"
-        height="100%"
+        width={width}
+        height={height}
+        style={style}
         mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={setViewport}
         mapboxApiAccessToken={config.mapboxToken}
         onClick={handleMapClick}
-      >
+        interactiveLayerIds={interactiveLayerIds}
+        ref={ref}
+        >
       {children}
-      </MapGL>
-    
+    </MapGL>
   );
-};
+});
 
 export default Map;

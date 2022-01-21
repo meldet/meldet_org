@@ -5,6 +5,7 @@ import {ReportWithCat } from "../lib/uiDataFetching";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CategoryLabel from "./CategoryLabel";
 
 export default function Report({title, address, incidentDate, description, categories}: ReportWithCat) {
   const [date, setDate] = React.useState<{day: String, time: string}>({day: "", time: ""})
@@ -31,7 +32,7 @@ export default function Report({title, address, incidentDate, description, categ
     return (
         <Paper elevation={4} sx={{ padding: 2, margin: 2, marginBottom: 4, maxWidth: '450px' }}>
             <Typography variant={"h5"} mb={1}>
-              {title}
+              {title.toLowerCase()}
             </Typography>
 
             <Grid container mb={1}>
@@ -70,7 +71,7 @@ export default function Report({title, address, incidentDate, description, categ
               }}
             >
               {categories && categories.map((cat) => (
-                <Chip key={cat.name} label={cat.name} />
+                <CategoryLabel key={cat.id} {...cat} onClick={(e: any) =>{}} /> // handleclick is for getting the hover feel
               ))}
             </Box>
           </Paper>
