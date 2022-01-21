@@ -6,13 +6,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../createEmotionCache";
-import { FilterValues, initialFilterValues, UiContext } from "../lib/context";
+import { FilterValues, initialFilterValues, initialViewport, IsMobileContext, UiContext } from "../lib/context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import "mapbox-gl/dist/mapbox-gl.css";
 import '../styles/globals.css'
 import nlBE from "date-fns/locale/nl-BE";
+import { Viewport } from "../components/Map";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -27,27 +28,29 @@ export default function MyApp({
   emotionCache = clientSideEmotionCache,
   pageProps,
 }: MyAppProps) {
-  // UiState 
   
-  const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
-
+  
   const setFilterValues = (values: FilterValues) => {
     setUiState({
       ...UiState, 
-      isMobile,
-      filterValues: values})
+      filterValues: values
+    })
   }
   
+  const setViewport = (newViewport: Partial<Viewport>) => {
+      setUiState({...UiState, viewport: {...UiState.viewport, ...newViewport}})
+  }
+  
+  
   const [UiState, setUiState] = React.useState({ 
-    isMobile: true,
     filterValues: initialFilterValues, 
-    setFilterValues
+    setFilterValues,
+    viewport: initialViewport,
+    setViewport,
   });
   
+  const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
   
-  React.useEffect(() => {
-    setUiState({ ...UiState, isMobile });
-  }, [isMobile]);
 
 
   // DataState
@@ -79,11 +82,13 @@ export default function MyApp({
       <LocalizationProvider locale={nlBE} dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <UiContext.Provider value={UiState}>
+          <IsMobileContext.Provider value={{isMobile}}>
 
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
               <Component {...pageProps} />
 
+          </IsMobileContext.Provider>
           </UiContext.Provider>
         </ThemeProvider>
       </LocalizationProvider>

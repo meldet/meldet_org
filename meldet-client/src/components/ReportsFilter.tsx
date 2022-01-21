@@ -12,15 +12,18 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  TextField,
+  styled,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import * as React from "react";
 import {
   DataContext,
+  initialFilterValues,
+  IsMobileContext,
   UiContext,
 } from "../lib/context";
+import { reportsFilter } from "../lib/reportsFilter";
 
 export default function ReportsFilter({
   handleClose,
@@ -37,46 +40,54 @@ export default function ReportsFilter({
     setOpen(true);
   };
 
+  const {isMobile} = React.useContext(IsMobileContext)
+
+
   return (
     <UiContext.Consumer>
-      {({ filterValues, setFilterValues, isMobile }) => (
+      {({ filterValues, setFilterValues }) => (
         <DataContext.Consumer>
-          {({ applyReportsFilter, reports, filteredReports, categories }) => (
-            <>
+          {({ applyReportsFilter, reports, categories }) => (
+            <form
+              onSubmit={(e: any) => {
+                console.log(e);
+                e.preventDefault();
+                applyReportsFilter(filterValues);
+                handleClose();
+              }}
+            >
               <Box m={2} minWidth={300} maxWidth={isMobile ? "100%" : 400}>
                 <Box>
-                  <Typography variant="h5">Filter</Typography>
-                  <FormControl sx={{marginTop: 2}}>
-                  <InputLabel htmlFor="search">
-                    search
-                  </InputLabel>
-                  <OutlinedInput
-                    label="search"
-                    id="search"
-                    type="text"
-                    fullWidth
-                    endAdornment={
-                      filterValues.search && (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="clear input"
-                            onClick={() =>
-                              setFilterValues({ ...filterValues, search: "" })
-                            }
-                            edge="end"
+                  <Typography variant="h5">filter</Typography>
+                  <FormControl sx={{ marginTop: 2 }}>
+                    <InputLabel htmlFor="search">search</InputLabel>
+                    <OutlinedInput
+                      label="search"
+                      id="search"
+                      type="text"
+                      fullWidth
+                      endAdornment={
+                        filterValues.search && (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="clear input"
+                              onClick={() =>
+                                setFilterValues({ ...filterValues, search: "" })
+                              }
+                              edge="end"
                             >
-                          <CloseIcon fontSize="small" />
+                              <CloseIcon fontSize="small" />
                             </IconButton>
-                        </InputAdornment>
-                      )
-                    }
-                    onChange={(e) => {
-                      setFilterValues({
-                        ...filterValues,
-                        search: e.target.value,
-                      });
-                    }}
-                    value={filterValues.search}
+                          </InputAdornment>
+                        )
+                      }
+                      onChange={(e) => {
+                        setFilterValues({
+                          ...filterValues,
+                          search: e.target.value,
+                        });
+                      }}
+                      value={filterValues.search}
                     />
                   </FormControl>
                   <Box sx={{ marginTop: 2 }}>
@@ -127,29 +138,38 @@ export default function ReportsFilter({
                         ))}
                       </Select>
                       <FormHelperText>
-                        {filteredReports.length}/{reports.length}
+                        {reportsFilter(reports, filterValues).length}/
+                        {reports.length}
                       </FormHelperText>
                     </FormControl>
                   </Box>
                 </Box>
-                <Box display={"flex"} justifyContent={"flex-end"} mt={2}>
-                  {/* <Button onClick={handleClose}>Cancel</Button> */}
+                <Box display={"flex"} justifyContent={"space-between"} mt={2}>
+                  <ClearAllButton
+                    size="small"
+                    onClick={() => setFilterValues(initialFilterValues)}
+                  >
+                    clear all
+                  </ClearAllButton>
                   <Button
+                    type="submit"
                     variant="contained"
                     sx={{ marginLeft: 1 }}
-                    onClick={() => {
-                      applyReportsFilter(filterValues);
-                      handleClose();
-                    }}
                   >
                     Apply
                   </Button>
                 </Box>
               </Box>
-            </>
+            </form>
           )}
         </DataContext.Consumer>
       )}
     </UiContext.Consumer>
   );
 }
+
+
+
+const ClearAllButton = styled(Button)({
+  textTransform: 'none',
+})

@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
 import CloseIcon from "@mui/icons-material/Close";
 import ReportsFilterButton from "../components/ReportsFilterButton";
-import { DataContext, FilterValues, initialFilterValues, UiContext } from "../lib/context";
+import { DataContext, FilterValues, initialFilterValues, IsMobileContext, UiContext } from "../lib/context";
 import { GetStaticProps } from "next";
 import { fetchReports, fetchCategories } from "../lib/helpers";
 import { Category } from "@prisma/client";
@@ -16,6 +16,7 @@ import { reportsFilter } from "../lib/reportsFilter";
 import { ReportWithCat } from "../lib/uiDataFetching";
 import ReportsMap from "../components/ReportsMap";
 import Report from "../components/Report";
+import FlyToButton from "../components/FlyToButton";
 
 
 const drawerWidth = 350;
@@ -65,15 +66,17 @@ const Index = ({categories, reports}: Props) => {
     reports.length > 0 ? handleDrawerOpen() : handleDrawerClose()
   }
 
+    const {isMobile} = React.useContext(IsMobileContext)
+
   return (
     <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter, selectedReports, applySelectedReports}}>
-      <UiContext.Consumer>
-        {({ isMobile }) => (
+
           <Grid container flexDirection="column" alignItems={"flex-end"}>
 
             <ReportsMap />
             <Navigation />
             <ReportsFilterButton />
+            <FlyToButton />
 
             <Drawer
               sx={{
@@ -101,8 +104,6 @@ const Index = ({categories, reports}: Props) => {
               {/* <Report {...selectedReports[0]} /> */}
             </Drawer>
           </Grid>
-        )}
-      </UiContext.Consumer>
     </DataContext.Provider>
   );
 }

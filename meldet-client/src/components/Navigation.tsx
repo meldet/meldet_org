@@ -11,7 +11,7 @@ import {
   styled,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { UiContext } from "../lib/context";
+import { IsMobileContext } from "../lib/context";
 
 const Container = styled("div")(({ theme }) => ({
   display: "flex",
@@ -53,80 +53,78 @@ export default function Navigation({ children }: { children?: any }) {
   };
 
   return (
-    <UiContext.Consumer>
+    <IsMobileContext.Consumer>
       {({ isMobile }) => (
-        <Paper elevation={2} sx={{zIndex: "appBar", m: 1}}>
-        <Grid
-          container
-          justifyContent={"flex-end"}
-          alignContent="center"
-          alignItems="baseline"
-          sx={{ p: isMobile ? 1 : 2 }}
-          
-          alignSelf="flex-end"
+        <Paper elevation={2} sx={{ zIndex: "appBar", m: 1 }}>
+          <Grid
+            container
+            justifyContent={"flex-end"}
+            alignContent="center"
+            alignItems="baseline"
+            sx={{ p: isMobile ? 1 : 2 }}
+            alignSelf="flex-end"
           >
-          <Link noLinkStyle href="/report" sx={{ marginRight: 2, marginLeft: 0 }}>
-            <Button variant="contained">Report</Button>
-          </Link>
-          {isMobile ? (
-            <Box>
-              <IconButton
-                id="navigation-button"
-                aria-controls="menu"
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-                sx={{padding: 0}}
+            <Link
+              noLinkStyle
+              href="/report"
+              sx={{ marginRight: 2, marginLeft: 0 }}
+            >
+              <Button variant="contained">Report</Button>
+            </Link>
+            {isMobile ? (
+              <Box>
+                <IconButton
+                  id="navigation-button"
+                  aria-controls="menu"
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
+                  sx={{ padding: 0 }}
                 >
-                <MenuIcon fontSize="large" />
-              </IconButton>
-              <Menu
-                id="menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "navigation-button",
-                }}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                  <MenuIcon fontSize="large" />
+                </IconButton>
+                <Menu
+                  id="menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "navigation-button",
+                  }}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
                 >
-                {links.map((link) => (
-                  <MenuItem key={link.href} onClick={handleClose}>
-                    <Button color="secondary">
+                  {links.map((link) => (
+                    <MenuItem key={link.href} onClick={handleClose}>
+                      <Button color="secondary">
+                        <Link noLinkStyle href={link.href}>
+                          {link.caption}
+                        </Link>
+                      </Button>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : (
+              links.map((link) => (
+                <Grid item key={link.href} alignSelf="center">
+                  <Button color="secondary">
                     <Link noLinkStyle href={link.href}>
                       {link.caption}
                     </Link>
-                    </Button>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          ) : (
-            links.map((link) => (
-              <Grid
-              item
-              key={link.href}
-              alignSelf="center"
-              >
-
-                <Button color="secondary">
-                <Link noLinkStyle href={link.href}>
-                  {link.caption}
-                </Link>
-                </Button>
-              </Grid>
-            ))
+                  </Button>
+                </Grid>
+              ))
             )}
-        </Grid>
-      </Paper>
+          </Grid>
+        </Paper>
       )}
-    </UiContext.Consumer>
+    </IsMobileContext.Consumer>
   );
 }

@@ -8,7 +8,7 @@ import ReportReview from "../components/ReportReview";
 import ReportFormSuccess from "../components/ReportFormSuccess";
 import { fetchCategories } from "../lib/helpers";
 import { GetStaticProps } from "next";
-import { UiContext } from "../lib/context";
+import { IsMobileContext } from "../lib/context";
 import ReportMapPicker from "../components/ReportMapPicker";
 import { randomKey } from "../components/LocationForm";
 
@@ -63,7 +63,7 @@ export default function Report({categories}: IReport) {
 
 
     return (
-      <UiContext.Consumer>
+      <IsMobileContext.Consumer>
         {({ isMobile }) => (
           <Grid container flexDirection="column">
             <Navigation />
@@ -96,7 +96,7 @@ export default function Report({categories}: IReport) {
             </Grid>
           </Grid>
         )}
-      </UiContext.Consumer>
+      </IsMobileContext.Consumer>
     );
 }
 

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState, useRef } from "react";
-import MapGL, { Source, Layer, ViewportProps, MapEvent } from "react-map-gl";
+import MapGL, { Source, Layer, ViewportProps, MapEvent, FlyToInterpolator } from "react-map-gl";
 import { config } from "../config";
-import { DataContext } from "../lib/context";
+import { DataContext, UiContext } from "../lib/context";
 
 import {
   clusterLayer,
@@ -10,16 +10,11 @@ import {
   unclusteredPointLayer,
 } from "../lib/layers";
 import { ReportWithCat } from "../lib/uiDataFetching";
+import Map from "./Map";
 
 
-export default function App() {
-  const [viewport, setViewport] = useState<ViewportProps>({
-    longitude: 3.720367,
-    latitude: 51.053075,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0,
-  });
+export default function ReportsMap() {
+  const {setViewport} = React.useContext(UiContext)
 
   const mapRef = useRef<any>(null);
 
@@ -36,11 +31,11 @@ export default function App() {
         }
 
         setViewport({
-          ...viewport,
           longitude: feature.geometry.coordinates[0],
           latitude: feature.geometry.coordinates[1],
           zoom,
           transitionDuration: 500,
+          transitionInterpolator: new FlyToInterpolator(),
         });
       });
     }
@@ -62,15 +57,14 @@ export default function App() {
         pointCount: number
     }
   }
-
-
+  
   const setSelectedReport = (feature: ClusterFeature, setValues: (v: ReportWithCat[]) => void) => {
+
 
         const isCluster = 
         feature?.properties?.cluster;
 
         if (isCluster) {
-            
           const geoJsonSource = mapRef.current.getMap().getSource("reports");
           geoJsonSource.getClusterLeaves(
             feature.properties.cluster_id,
@@ -93,22 +87,18 @@ export default function App() {
 
   return (
     <DataContext.Consumer>
-      {({ filteredReports, selectedReports, applySelectedReports }) => (
+      {({ filteredReports, applySelectedReports }) => (
         <>
-          <MapGL
-            {...viewport}
+          <Map
             style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
             width="100vw"
             height="100vh"
-            mapStyle="mapbox://styles/mapbox/dark-v9"
-            onViewportChange={setViewport}
-            mapboxApiAccessToken={config.mapboxToken}
             interactiveLayerIds={["clusters", "unclustered-point"]}
-            onClick={(e: MapEvent) => {
+            handleMapClick={(e: MapEvent) => {
                 try {
                   const feature: ClusterFeature = e.features && e.features[0];
-                  flyToLoc(feature);
                   setSelectedReport(feature, applySelectedReports);
+                  flyToLoc(feature);
                 } catch (err) {
                   console.log(err);
                 }
@@ -137,7 +127,7 @@ export default function App() {
               <Layer {...clusterCountLayer} />
               <Layer {...unclusteredPointLayer} />
             </Source>
-          </MapGL>
+          </Map>
         </>
       )}
     </DataContext.Consumer>
