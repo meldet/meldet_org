@@ -24,7 +24,7 @@ export default function About({ categories }: Props) {
           <Grid item xs={12} md={6} m={2}>
             <Paper sx={{ padding: 4 }}>
               <Typography variant="h4" component="h1" gutterBottom>
-                About Meldet
+                about meldet
               </Typography>
               <Typography variant="body1" marginBottom={2}>
                 meldet.org is a Gent-based (Belgium) independent organization

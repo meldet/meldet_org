@@ -8,11 +8,11 @@ export default function ReportFormSuccess() {
   return (
     <div>
       <Typography variant="h4" component="h1" gutterBottom ml={2}>
-        Report step
+        report step
       </Typography>
-      Form successfully submitted
+      form successfully submitted
       <Button>
-        <Link href={"/"}>Home</Link>
+        <Link href={"/"}>home</Link>
       </Button>
     </div>
   );

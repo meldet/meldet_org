@@ -15,6 +15,7 @@ export const fetchReports = async (limit = 5000) => {
                 select: {
                     id: true,
                     name: true,
+                    description: true,
                 }
             }, 
             description: true, 

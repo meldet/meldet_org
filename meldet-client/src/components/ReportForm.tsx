@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Chip,
+  Checkbox,
   FormControl,
   Grid,
   ListItemText,
@@ -15,6 +15,7 @@ import { TextField, Select } from "formik-mui";
 import { DateTimePicker } from "formik-mui-lab";
 import * as React from "react";
 import { ReportFormValues, ReportSteps } from "../pages/report";
+import CategoryLabel from "./CategoryLabel";
 import LocationForm from "./LocationForm";
 import ReportMapPicker from "./ReportMapPicker";
 
@@ -44,13 +45,13 @@ export default function ReportForm({
       validate={(values) => {
         const errors: any = {};
         if (!values.title) {
-          errors.title = "Required";
+          errors.title = "required";
         } else if (!values.categories) {
-          errors.categories = "Required";
+          errors.categories = "required";
         } else if (!values.incidentDate) {
-          errors.incidentDate = "Required";
+          errors.incidentDate = "required";
         } else if (!formState.address) {
-          errors.address = "Required";
+          errors.address = "required";
         }
         return errors;
       }}
@@ -65,10 +66,10 @@ export default function ReportForm({
         handleStepChange("review");
       }}
     >
-      {({ submitForm, isSubmitting, errors, setFieldValue }) => (
+      {({ submitForm, isSubmitting, errors, setFieldValue, values }) => (
         <Grid item xs={12} md={4}>
           <Typography variant="h4" component="h1" gutterBottom ml={2}>
-            Report
+            report
           </Typography>
           <Form>
             <FormControl sx={{ p: 2, m: 0, width: "100%" }}>
@@ -77,7 +78,7 @@ export default function ReportForm({
                   <Field
                     component={TextField}
                     type="text"
-                    label="Title*"
+                    label="title*"
                     name="title"
                     fullWidth
                     autoFocus
@@ -104,12 +105,12 @@ export default function ReportForm({
                     component={Select}
                     multiple
                     formHelperText={{
-                      children: "Select one or more categories",
+                      children: "select one or more categories",
                     }}
                     id="categories"
                     name="categories"
-                    labelId="Categories"
-                    label="Categories*"
+                    labelId="categories"
+                    label="categories*"
                     input={
                       <OutlinedInput
                         id="categories-input"
@@ -128,17 +129,20 @@ export default function ReportForm({
                           gap: 0.5,
                         }}
                       >
-                        {selected.map((value: string) => (
-                          <Chip key={value} label={JSON.parse(value).name} />
-                        ))}
+                        {selected.map((value: string) => {
+                          const category = JSON.parse(value) as Category;
+                          return (
+                            <CategoryLabel key={category.id} {...category} />
+                          );
+                        })}
                       </Box>
                     )}
                     onChange={(e: any) => {
                       setOpen(false);
-                      setFieldValue('categories', e.target.value)
+                      setFieldValue("categories", e.target.value);
                     }}
                     validate={(values: any[]) =>
-                      values.length <= 0 ? "Required" : undefined
+                      values.length <= 0 ? "required" : undefined
                     }
                   >
                     {categories &&
@@ -148,10 +152,14 @@ export default function ReportForm({
                           value={JSON.stringify(category)}
                           style={{ whiteSpace: "normal", maxWidth: 450 }}
                         >
-                          {/* <Checkbox checked={values.indexOf(name) > -1} /> */}
+                          <Checkbox
+                            checked={
+                              values.categories.indexOf(
+                                JSON.stringify(category)
+                              ) > -1
+                            }
+                          />
                           <ListItemText
-                            classes={{ primary: `color: red` }}
-                            inset
                             primary={category.name.toUpperCase()}
                             secondary={category.description}
                           />
@@ -168,10 +176,10 @@ export default function ReportForm({
                     name="incidentDate"
                     maxDate={new Date()}
                     textField={{
-                      helperText: "This is the date of the incident",
+                      helperText: "this is the date of the incident",
                     }}
                     validate={(values: Date | undefined) =>
-                      !values ? "Required" : undefined
+                      !values ? "required" : undefined
                     }
                   />
                 </Grid>

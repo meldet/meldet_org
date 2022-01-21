@@ -29,15 +29,15 @@ const Container = styled("div")(({ theme }) => ({
 const links = [
   {
     href: "/",
-    caption: "Reports",
+    caption: "reports",
   },
   {
     href: "/about",
-    caption: "About",
+    caption: "about",
   },
   {
     href: "/contact",
-    caption: "Contact us",
+    caption: "contact us",
   },
 ];
 

@@ -17,6 +17,7 @@ import { ReportWithCat } from "../lib/uiDataFetching";
 import ReportsMap from "../components/ReportsMap";
 import Report from "../components/Report";
 import FlyToButton from "../components/FlyToButton";
+import isDev from "../lib/isDev";
 
 
 const drawerWidth = 350;
@@ -101,7 +102,6 @@ const Index = ({categories, reports}: Props) => {
                   <Report key={report.id} {...report} />
                 ))
               }
-              {/* <Report {...selectedReports[0]} /> */}
             </Drawer>
           </Grid>
     </DataContext.Provider>
@@ -111,7 +111,8 @@ const Index = ({categories, reports}: Props) => {
 export default Index;
 
 export const getStaticProps: GetStaticProps = async ({}) => {
-  const reports = await fetchReports();
+  // limit the amount of nodes to fetch during development to prevent overquerying the DB
+  const reports = isDev() ? await fetchReports(50) : await fetchReports();
   const categories = await fetchCategories();
   
   if (!categories || !reports) {
