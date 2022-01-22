@@ -74,8 +74,8 @@ const addReports = async function (options: {
 
 async function main() {
     // insert the categories first to have a link in db!
-    // await addCategories();
-    await addReports({enhanceLocation: false, rawDataPath: './meldet_wordpress_datadump_16_jan.json'});
+    await addCategories();
+    await addReports({enhanceLocation: true, rawDataPath: './meldet_wordpress_datadump_22_jan.json'});
 
     // query reports to check if it worked
     const getReports = await prisma.report.findMany({

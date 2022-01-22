@@ -20,6 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import * as React from "react";
 import {
   DataContext,
+  FilterValues,
   initialFilterValues,
   IsMobileContext,
   UiContext,
@@ -45,7 +46,7 @@ export default function ReportsFilter({
   };
 
   const {isMobile} = React.useContext(IsMobileContext)
-  const { filterValues, setFilterValues } = React.useContext(UiContext);
+  const { filterValues, setUiState, viewport } = React.useContext(UiContext);
   const { applyReportsFilter, reports, categories } =
     React.useContext(DataContext);
 
@@ -55,6 +56,13 @@ React.useEffect(() => {
   reportsFilter(reports, filterValues)
   )
 }, [filterValues, reports])
+
+  const setFilterValues = (filterValues: FilterValues) => {
+    setUiState({
+      filterValues, 
+      viewport,
+    })
+  }
 
 
 

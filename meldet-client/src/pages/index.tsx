@@ -20,7 +20,7 @@ import FlyToButton from "../components/FlyToButton";
 import isDev from "../lib/isDev";
 
 
-const drawerWidth = 350;
+const drawerWidth = 480;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",

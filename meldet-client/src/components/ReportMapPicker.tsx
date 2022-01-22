@@ -18,14 +18,19 @@ export default function ReportMapPicker({
   formState,
   handleFormSubmit,
 }: IReportMapPicker) {
-  const { setViewport } = React.useContext(UiContext);
-
+  const { setUiState, viewport, filterValues } = React.useContext(UiContext);
   React.useEffect(() => {
-    setViewport({
-      latitude: Number(formState.lat),
-      longitude: Number(formState.lng),
-      transitionDuration: 500,
-      transitionInterpolator: new FlyToInterpolator(),
+    // do this to prevent jump to 0, 0 on initial load
+    if (Number(formState.lat) == 0 && Number(formState.lng) == 0) return;
+    setUiState({
+      filterValues,
+      viewport: {
+        ...viewport,
+        latitude: Number(formState.lat),
+        longitude: Number(formState.lng),
+        transitionDuration: 500,
+        transitionInterpolator: new FlyToInterpolator(),
+      }
     });
   }, [formState.lat, formState.lng]);
 
@@ -50,7 +55,6 @@ export default function ReportMapPicker({
 
   return (
     <Grid item xs={12} md={8} sx={{ minHeight: 400 }}>
-      {/* <Box sx={{ position: "relative", height: "400px", width: "auto" }}> */}
       <Map handleMapClick={handleMapClick}>
         {formState.lat && formState.lng && (
           <Marker
@@ -64,7 +68,6 @@ export default function ReportMapPicker({
           </Marker>
         )}
       </Map>
-      {/* </Box> */}
     </Grid>
   );
 }

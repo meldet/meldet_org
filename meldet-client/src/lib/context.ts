@@ -11,9 +11,13 @@ export interface FilterValues {
 }
 export interface IUiContext {
   filterValues: FilterValues;
-  setFilterValues: (filterValues: FilterValues) => void;
   viewport: Viewport;
-  setViewport: (viewport: Partial<Viewport>) => void;
+  setUiState: React.Dispatch<
+    React.SetStateAction<{
+      filterValues: FilterValues;
+      viewport: Viewport;
+    }>
+  >;
 }
 
 export const initialFilterValues: FilterValues = {
@@ -36,9 +40,8 @@ export const initialViewport: Viewport = {
 
 export const UiContext = React.createContext<IUiContext>({
   filterValues: initialFilterValues,
-  setFilterValues: () => {},
   viewport: initialViewport,
-  setViewport: () => {},
+  setUiState: () => {},
 });
 
 export const IsMobileContext = React.createContext({isMobile: true})
