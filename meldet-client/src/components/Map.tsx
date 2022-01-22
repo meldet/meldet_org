@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
-import React, { useContext, useEffect } from "react";
-import MapGL, { MapEvent, FlyToInterpolator } from "react-map-gl";
+import React, { useContext } from "react";
+import MapGL, { MapEvent } from "react-map-gl";
 import { config } from "../config";
 import { UiContext } from "../lib/context";
 
@@ -30,7 +30,19 @@ const Map = React.forwardRef<any, Props>((props, ref) => {
   const { handleMapClick, children, interactiveLayerIds = [], style={}, width = '100%', height = '100%' } = props
 
 
-  const {viewport, setViewport} = useContext(UiContext)
+  const {viewport, setUiState,filterValues } = useContext(UiContext)
+
+  const setViewport = (newViewport: Partial<Viewport>) => {
+    // do this to prevent jump to 0, 0 on initial load
+    if (newViewport.latitude == 0 && newViewport.longitude == 0) return;
+    setUiState({
+      filterValues,
+      viewport: {
+        ...viewport,
+        ...newViewport,
+      },
+    });
+  }
 
 
   return (

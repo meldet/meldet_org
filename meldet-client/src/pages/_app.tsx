@@ -13,7 +13,6 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import "mapbox-gl/dist/mapbox-gl.css";
 import '../styles/globals.css'
 import nlBE from "date-fns/locale/nl-BE";
-import { Viewport } from "../components/Map";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -29,25 +28,14 @@ export default function MyApp({
   pageProps,
 }: MyAppProps) {
   
-  
-  const setFilterValues = (values: FilterValues) => {
-    setUiState({
-      ...UiState, 
-      filterValues: values
-    })
-  }
-  
-  const setViewport = (newViewport: Partial<Viewport>) => {
-      setUiState({...UiState, viewport: {...UiState.viewport, ...newViewport}})
-  }
+
   
   
   const [UiState, setUiState] = React.useState({ 
     filterValues: initialFilterValues, 
-    setFilterValues,
     viewport: initialViewport,
-    setViewport,
   });
+
   
   const isMobile = useMediaQuery("(max-width:800px)", { noSsr: true });
   
@@ -81,7 +69,7 @@ export default function MyApp({
       </Head>
       <LocalizationProvider locale={nlBE} dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <UiContext.Provider value={UiState}>
+          <UiContext.Provider value={{...UiState, setUiState}}>
           <IsMobileContext.Provider value={{isMobile}}>
 
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

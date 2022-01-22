@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useState, useRef } from "react";
-import MapGL, { Source, Layer, ViewportProps, MapEvent, FlyToInterpolator } from "react-map-gl";
-import { config } from "../config";
+import {  useRef } from "react";
+import { Source, Layer, MapEvent, FlyToInterpolator } from "react-map-gl";
 import { DataContext, UiContext } from "../lib/context";
 
 import {
@@ -10,11 +9,21 @@ import {
   unclusteredPointLayer,
 } from "../lib/layers";
 import { ReportWithCat } from "../lib/uiDataFetching";
-import Map from "./Map";
+import Map, { Viewport } from "./Map";
 
 
 export default function ReportsMap() {
-  const {setViewport} = React.useContext(UiContext)
+  const { viewport, setUiState, filterValues } = React.useContext(UiContext);
+
+    const setViewport = (newviewport: Partial<Viewport>) => {
+      setUiState({
+        filterValues,
+        viewport: {
+          ...viewport,
+          ...newviewport,
+        },
+      });
+    };
 
   const mapRef = useRef<any>(null);
 
