@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "meldet-admin",
+    "slug": "meldet-admin",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "../meldet-admin-next/public/icon.png",
+    "splash": {
+      "image": "../meldet-admin-next/public/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "../**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.thorrstevens.meldetadmin",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.thorrstevens.meldetadmin",
+      "adaptiveIcon": {
+        "foregroundImage": "../meldet-admin-next/public/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "../meldet-admin-next/public/favicon.png"
+    }
+  }
+}

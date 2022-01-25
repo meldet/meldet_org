@@ -1,0 +1,13 @@
+{
+  "extends": "config/tsconfig.next",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true
+  }
+}
