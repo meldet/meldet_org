@@ -3,8 +3,7 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "meldet-client"
+    "packages/*"
   ],
   "scripts": {
     "meldet-client": "yarn workspace meldet-client",
