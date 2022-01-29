@@ -46,19 +46,18 @@ const Map = React.forwardRef<any, Props>((props, ref) => {
 
 
   return (
-
-        <MapGL
-        {...viewport}
-        width={width}
-        height={height}
-        style={style}
-        mapStyle="mapbox://styles/mapbox/dark-v9"
-        onViewportChange={setViewport}
-        mapboxApiAccessToken={config.mapboxToken}
-        onClick={handleMapClick}
-        interactiveLayerIds={interactiveLayerIds}
-        ref={ref}
-        >
+    <MapGL
+      {...viewport}
+      width={width}
+      height={height}
+      style={style}
+      mapStyle="mapbox://styles/mapbox/dark-v9"
+      onViewportChange={setViewport}
+      mapboxApiAccessToken={config.mapboxToken}
+      onClick={handleMapClick}
+      interactiveLayerIds={interactiveLayerIds}
+      ref={ref}
+    >
       {children}
     </MapGL>
   );

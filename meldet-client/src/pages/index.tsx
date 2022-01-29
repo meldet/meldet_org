@@ -1,14 +1,16 @@
 import * as React from "react";
-import {
-  Drawer,
-  Grid,
-  IconButton,
-} from "@mui/material";
+import { Drawer, Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Navigation from "../components/Navigation";
 import CloseIcon from "@mui/icons-material/Close";
 import ReportsFilterButton from "../components/ReportsFilterButton";
-import { DataContext, FilterValues, initialFilterValues, IsMobileContext, UiContext } from "../lib/context";
+import {
+  DataContext,
+  FilterValues,
+  initialFilterValues,
+  IsMobileContext,
+  UiContext,
+} from "../lib/context";
 import { GetStaticProps } from "next";
 import { fetchReports, fetchCategories } from "../lib/helpers";
 import { Category } from "@prisma/client";
@@ -19,8 +21,7 @@ import Report from "../components/Report";
 import FlyToButton from "../components/FlyToButton";
 import isDev from "../lib/isDev";
 
-
-const drawerWidth = 480;
+const drawerWidth = 450;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -32,11 +33,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 interface Props {
-  categories: Category[]
-  reports: ReportWithCat[]
+  categories: Category[];
+  reports: ReportWithCat[];
 }
-const Index = ({categories, reports}: Props) => {
-  
+const Index = ({ categories, reports }: Props) => {
   // opening and closing drawer stuff
   const [open, setOpen] = React.useState<boolean>(false); // TODO this should go in context
   const handleDrawerOpen = () => {
@@ -49,31 +49,42 @@ const Index = ({categories, reports}: Props) => {
 
   // DataState
   // const [reports, setReports] = React.useState<ReportWithCat[]>([]);
-  const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>([]);
-  const [selectedReports, setSelectedReports] = React.useState<ReportWithCat[]>([]);
+  const [filteredReports, setFilteredReports] = React.useState<ReportWithCat[]>(
+    []
+  );
+  const [selectedReports, setSelectedReports] = React.useState<ReportWithCat[]>(
+    []
+  );
 
   React.useEffect(() => {
-    applyReportsFilter(initialFilterValues)
-  }, [])
+    applyReportsFilter(initialFilterValues);
+  }, []);
 
   const applyReportsFilter = (filterValues: FilterValues) => {
-    setFilteredReports(
-      [...reportsFilter(reports, filterValues)]
-    );
-  }
+    setFilteredReports([...reportsFilter(reports, filterValues)]);
+  };
 
   const applySelectedReports = (reports: ReportWithCat[]) => {
     setSelectedReports(reports);
-    reports.length > 0 ? handleDrawerOpen() : handleDrawerClose()
-  }
+    reports.length > 0 ? handleDrawerOpen() : handleDrawerClose();
+  };
 
-    const {isMobile} = React.useContext(IsMobileContext)
+  // const {isMobile} = React.useContext(IsMobileContext)
 
   return (
-    <DataContext.Provider value={{reports, categories, filteredReports, applyReportsFilter, selectedReports, applySelectedReports}}>
-
+    <DataContext.Provider
+      value={{
+        reports,
+        categories,
+        filteredReports,
+        applyReportsFilter,
+        selectedReports,
+        applySelectedReports,
+      }}
+    >
+      <IsMobileContext.Consumer>
+        {({ isMobile }) => (
           <Grid container flexDirection="column" alignItems={"flex-end"}>
-
             <ReportsMap />
             <Navigation />
             <ReportsFilterButton />
@@ -81,7 +92,7 @@ const Index = ({categories, reports}: Props) => {
 
             <Drawer
               sx={{
-                width: drawerWidth,
+                width: isMobile ? "100%" : drawerWidth,
                 flexShrink: 0,
                 "& .MuiDrawer-paper": {
                   width: isMobile ? "100%" : drawerWidth,
@@ -97,16 +108,16 @@ const Index = ({categories, reports}: Props) => {
                   <CloseIcon />
                 </IconButton>
               </DrawerHeader>
-              {
-                selectedReports.map(report => (
-                  <Report key={report.id} {...report} />
-                ))
-              }
+              {selectedReports.map((report) => (
+                <Report key={report.id} {...report} />
+              ))}
             </Drawer>
           </Grid>
+        )}
+      </IsMobileContext.Consumer>
     </DataContext.Provider>
   );
-}
+};
 
 export default Index;
 
@@ -114,7 +125,7 @@ export const getStaticProps: GetStaticProps = async ({}) => {
   // limit the amount of nodes to fetch during development to prevent overquerying the DB
   const reports = isDev() ? await fetchReports(50) : await fetchReports();
   const categories = await fetchCategories();
-  
+
   if (!categories || !reports) {
     return {
       notFound: true,

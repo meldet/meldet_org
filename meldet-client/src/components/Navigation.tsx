@@ -77,6 +77,7 @@ export default function Navigation({ children }: { children?: any }) {
                   id="navigation-button"
                   aria-controls="menu"
                   aria-haspopup="true"
+                  component="span"
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClick}
                   sx={{ padding: 0 }}
