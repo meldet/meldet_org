@@ -1,5 +1,0 @@
-{
-  "extends": "config/tsconfig.expo",
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
-}

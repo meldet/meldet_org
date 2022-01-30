@@ -2,14 +2,13 @@
   "name": "meldet_org",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "meldet-client",
+    "meldet-admin",
+    "meldet-api"
   ],
   "scripts": {
     "meldet-client": "yarn workspace meldet-client",
     "meldet-admin": "yarn workspace meldet-admin",
-    "meldet-admin-expo": "yarn workspace meldet-admin-expo",
-    "meldet-admin-next": "yarn workspace meldet-admin-next",
     "meldet-api": "yarn workspace meldet-api",
     "dev:client": "yarn meldet-client dev"
   }

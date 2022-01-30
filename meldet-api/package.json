@@ -1,0 +1,35 @@
+{
+  "name": "meldet-api",
+  "main": "index.ts",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "3.6.0",
+    "@sendgrid/mail": "^7.6.0",
+    "axios": "^0.24.0",
+    "date-fns": "^2.27.0",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2",
+    "react-dom": "17.0.1",
+    "superjson": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/node": "16.11.7",
+    "@types/react": "~17.0.21",
+    "babel-plugin-superjson-next": "^0.4.2",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.3",
+    "prisma": "3.6.0",
+    "ts-node": "^10.4.0",
+    "typescript": "~4.3.5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  }
+}

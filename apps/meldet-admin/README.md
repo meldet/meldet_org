@@ -1,2 +1,0 @@
-# Meldet backoffice shared components
- 
